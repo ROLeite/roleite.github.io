@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Simulador: Regressão Logística (Empréstimo PJ)</title>
+  <style>
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;line-height:1.4;background:#f6f8fa;color:#111;margin:0;padding:24px}
+    .container{max-width:900px;margin:0 auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 6px 20px rgba(16,24,40,.08)}
+    h1{margin:0 0 12px;font-size:20px}
+    p.lead{color:#4b5563;margin:0 0 18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .feature{border:1px solid #e6e9ef;padding:12px;border-radius:8px;display:flex;gap:8px;align-items:center}
+    .controls{display:flex;gap:8px;align-items:center;margin-top:16px}
+    .btn{background:#0b69ff;color:#fff;padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
+    .btn.secondary{background:#eef2ff;color:#0b69ff}
+    .results{margin-top:18px}
+    .progress{height:12px;background:#eef2ff;border-radius:8px;overflow:hidden}
+    .progress > span{display:block;height:100%;width:0;background:#0b69ff;border-radius:8px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:8px;text-align:left;border-bottom:1px solid #eef2ff}
+    .metric{display:inline-block;padding:6px 10px;border-radius:999px;background:#f3f4f6;margin-right:8px}
+    .small{font-size:13px;color:#6b7280}
+    .note{margin-top:12px;color:#6b7280;font-size:13px}
+    footer{margin-top:18px;font-size:13px;color:#9ca3af}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Simulador de Regressão Logística — Empréstimo PJ</h1>
+    <h1>Disciplina de Gestão de Riscos, COPPEAD Finanças — Prof. Rodrigo Leite</h1>
+    <p class="lead">Selecione as features que deseja incluir no modelo. O site simula o cálculo de uma <strong>regressão logística</strong> e retorna os coeficientes (betas), seus <strong>p-valores</strong> e as métricas <strong>AUC</strong> e <strong>F1 score</strong>. (Resultados simulados)</p>
+
+    <div class="grid">
+      <div>
+        <div class="feature"><input type="checkbox" id="feat_receita_empresa" checked><label for="feat_receita_empresa">Receita da empresa</label></div>
+        <div class="feature"><input type="checkbox" id="feat_score_serasa" checked><label for="feat_score_serasa">Score Serasa do sócio administrador</label></div>
+        <div class="feature"><input type="checkbox" id="feat_capital_social" checked><label for="feat_capital_social">Capital social</label></div>
+        <div class="feature"><input type="checkbox" id="feat_num_func" checked><label for="feat_num_func">Número de funcionários</label></div>
+      </div>
+      <div>
+        <div class="feature"><input type="checkbox" id="feat_receita" checked><label for="feat_receita">Receita (último período)</label></div>
+        <div class="feature"><input type="checkbox" id="feat_lucro" checked><label for="feat_lucro">Lucro (último período)</label></div>
+        <div class="feature"><input type="checkbox" id="feat_caixa" checked><label for="feat_caixa">Caixa disponível</label></div>
+        <div class="controls">
+          <button class="btn" id="runBtn">Rodar regressão logística</button>
+          <button class="btn secondary" id="resetBtn">Resetar seleção</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="results" id="results" style="display:none">
+      <h3>Resultados (simulados)</h3>
+      <div class="small" id="infoRun">Estimando modelo...</div>
+      <div style="margin-top:8px" class="progress"><span id="bar"></span></div>
+
+      <div id="metrics" style="display:none;margin-top:12px">
+        <div style="margin-bottom:8px">
+          <span class="metric" id="aucBadge">AUC: —</span>
+          <span class="metric" id="f1Badge">F1 score: —</span>
+        </div>
+
+        <h4>Coeficientes estimados (Betas) e p-valores</h4>
+        <table id="betaTable"><thead><tr><th>Feature</th><th>Beta</th><th>p-valor</th></tr></thead><tbody></tbody></table>
+
+        <p class="note">Observação: estes valores são <strong>simulados</strong> e servem apenas para fins ilustrativos. O site imita o processo de estimação de uma regressão logística e o cálculo de métricas de desempenho (AUC e F1).</p>
+      </div>
+    </div>
+
+    <footer>(C) Prof. Rodrigo Leite — Simulação local no navegador (sem envio de dados)</footer>
+  </div>
+
+  <script>
+    function hashStr(s){
+      let h=2166136261 >>> 0;
+      for(let i=0;i<s.length;i++){
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619) >>> 0;
+      }
+      return (h % 1000000) / 1000000;
+    }
+
+    function sigmoid(x){return 1/(1+Math.exp(-x));}
+
+    document.getElementById('runBtn').addEventListener('click',()=>{
+      const features = [
+        {id:'receita_empresa',label:'Receita da empresa',checked:document.getElementById('feat_receita_empresa').checked},
+        {id:'score_serasa',label:'Score Serasa',checked:document.getElementById('feat_score_serasa').checked},
+        {id:'capital_social',label:'Capital social',checked:document.getElementById('feat_capital_social').checked},
+        {id:'num_func',label:'Número de funcionários',checked:document.getElementById('feat_num_func').checked},
+        {id:'receita',label:'Receita (último período)',checked:document.getElementById('feat_receita').checked},
+        {id:'lucro',label:'Lucro (último período)',checked:document.getElementById('feat_lucro').checked},
+        {id:'caixa',label:'Caixa disponível',checked:document.getElementById('feat_caixa').checked}
+      ];
+
+      const selected = features.filter(f=>f.checked);
+      if(selected.length===0){alert('Selecione ao menos uma feature.');return}
+
+      document.getElementById('results').style.display='block';
+      document.getElementById('metrics').style.display='none';
+      const bar = document.getElementById('bar');
+      bar.style.width='0%';
+      document.getElementById('infoRun').innerText='Estimando regressão logística (simulado)...';
+
+      let prog=0;
+      const progInterval = setInterval(()=>{
+        prog += Math.random()*15+5;
+        if(prog>98)prog=98;
+        bar.style.width = prog + '%';
+      },180);
+
+      setTimeout(()=>{
+        clearInterval(progInterval);
+        bar.style.width='100%';
+        document.getElementById('infoRun').innerText='Regressão logística concluída (simulada)';
+
+        // Gerar betas e p-valores simulados
+        const betas = selected.map(f=>{
+          const seed = f.id;
+          const betaVal = (hashStr(seed)*4 - 2).toFixed(2); // valores entre -2 e 2
+          let absBeta = Math.abs(betaVal);
+          // p-valor inversamente proporcional ao tamanho do beta
+          let pval = 1 - Math.min(1, absBeta / 2);
+          // valores acima de 0.50 tornam o p-valor significante
+          if (Math.abs(betaVal) > 0.50) pval *= 0.05;
+          pval = Math.max(0.001, Math.min(1, pval)).toFixed(3);
+          return {label:f.label,beta:betaVal,pval:pval};
+        });
+
+        // Calcular AUC e F1 simulados
+        const numSel = selected.length;
+        const auc = 0.60 + 0.38 * sigmoid((numSel-1)*0.6);
+        const f1 = 0.40 + 0.5 * sigmoid((numSel-1)*0.5);
+
+        const tbody = document.querySelector('#betaTable tbody');
+        tbody.innerHTML='';
+        for(const r of betas){
+          const tr = document.createElement('tr');
+          const tdA = document.createElement('td'); tdA.innerText = r.label;
+          const tdB = document.createElement('td'); tdB.innerText = r.beta;
+          const tdC = document.createElement('td'); tdC.innerText = r.pval;
+          tr.appendChild(tdA);tr.appendChild(tdB);tr.appendChild(tdC);
+          tbody.appendChild(tr);
+        }
+
+        document.getElementById('aucBadge').innerText = 'AUC: ' + auc.toFixed(3);
+        document.getElementById('f1Badge').innerText = 'F1 score: ' + f1.toFixed(3);
+        document.getElementById('metrics').style.display='block';
+      },2200);
+    });
+
+    document.getElementById('resetBtn').addEventListener('click',()=>{
+      document.querySelectorAll('input[type=checkbox]').forEach(cb=>cb.checked=true);
+      document.getElementById('results').style.display='none';
+    });
+  </script>
+</body>
+</html>
