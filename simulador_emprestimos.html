@@ -29,11 +29,11 @@
   <div class="container">
     <h1>Simulador de Regressão Logística — Empréstimo PJ</h1>
     <h1>Disciplina de Gestão de Riscos, COPPEAD Finanças — Prof. Rodrigo Leite</h1>
-    <p class="lead">Selecione as features que deseja incluir no modelo. O site simula o cálculo de uma <strong>regressão logística</strong> e retorna os coeficientes (betas), seus <strong>p-valores</strong> e as métricas <strong>AUC</strong> e <strong>F1 score</strong>. (Resultados simulados)</p>
+    <p class="lead">Selecione as features que deseja incluir no modelo. O site simula o cálculo de uma <strong>regressão logística</strong> em que a variável dependente é a probabilidade de default (1= default, 0 = não default) e retorna os coeficientes (betas), seus <strong>p-valores</strong> e as métricas <strong>AUC</strong> e <strong>F1 score</strong>. (Resultados simulados)</p>
 
     <div class="grid">
       <div>
-        <div class="feature"><input type="checkbox" id="feat_receita_empresa" checked><label for="feat_receita_empresa">Receita da empresa</label></div>
+        <div class="feature"><input type="checkbox" id="feat_tam_emprestimo" checked><label for="feat_tam_emprestimo">Tamanho do empréstimo</label></div>
         <div class="feature"><input type="checkbox" id="feat_score_serasa" checked><label for="feat_score_serasa">Score Serasa do sócio administrador</label></div>
         <div class="feature"><input type="checkbox" id="feat_capital_social" checked><label for="feat_capital_social">Capital social</label></div>
         <div class="feature"><input type="checkbox" id="feat_num_func" checked><label for="feat_num_func">Número de funcionários</label></div>
@@ -63,37 +63,26 @@
         <h4>Coeficientes estimados (Betas) e p-valores</h4>
         <table id="betaTable"><thead><tr><th>Feature</th><th>Beta</th><th>p-valor</th></tr></thead><tbody></tbody></table>
 
-        <p class="note">Observação: estes valores são <strong>simulados</strong> e servem apenas para fins ilustrativos. Esta aplicação o processo de estimação de uma regressão logística e o cálculo de métricas de desempenho (AUC e F1).</p>
+        <p class="note">Observação: estes valores são <strong>simulados</strong> e servem apenas para fins educacionais. O site simula o processo de estimação de uma regressão logística e o cálculo de métricas de desempenho (AUC e F1).</p>
       </div>
     </div>
 
-    <footer>(C) Prof. Rodrigo Leite — Simulação local no navegador (sem envio de dados)</footer>
+    <footer>(c) 2025 Prof. Rodrigo Leite — Simulação local no navegador (sem envio de dados).</footer>
   </div>
 
   <script>
-    function hashStr(s){
-      let h=2166136261 >>> 0;
-      for(let i=0;i<s.length;i++){
-        h ^= s.charCodeAt(i);
-        h = Math.imul(h, 16777619) >>> 0;
-      }
-      return (h % 1000000) / 1000000;
-    }
-
-    function sigmoid(x){return 1/(1+Math.exp(-x));}
+    const featureData = [
+      {id:'tam_emprestimo',label:'Tamanho do empréstimo',beta:-1.25,pval:0.012,significativa:true},
+      {id:'score_serasa',label:'Score Serasa',beta:0.35,pval:0.624,significativa:false},
+      {id:'capital_social',label:'Capital social',beta:-0.28,pval:0.731,significativa:false},
+      {id:'num_func',label:'Número de funcionários',beta:0.41,pval:0.582,significativa:false},
+      {id:'receita',label:'Receita (último período)',beta:-1.05,pval:0.021,significativa:true},
+      {id:'lucro',label:'Lucro (último período)',beta:-0.93,pval:0.037,significativa:true},
+      {id:'caixa',label:'Caixa disponível',beta:-1.10,pval:0.018,significativa:true}
+    ];
 
     document.getElementById('runBtn').addEventListener('click',()=>{
-      const features = [
-        {id:'receita_empresa',label:'Receita da empresa',checked:document.getElementById('feat_receita_empresa').checked},
-        {id:'score_serasa',label:'Score Serasa',checked:document.getElementById('feat_score_serasa').checked},
-        {id:'capital_social',label:'Capital social',checked:document.getElementById('feat_capital_social').checked},
-        {id:'num_func',label:'Número de funcionários',checked:document.getElementById('feat_num_func').checked},
-        {id:'receita',label:'Receita (último período)',checked:document.getElementById('feat_receita').checked},
-        {id:'lucro',label:'Lucro (último período)',checked:document.getElementById('feat_lucro').checked},
-        {id:'caixa',label:'Caixa disponível',checked:document.getElementById('feat_caixa').checked}
-      ];
-
-      const selected = features.filter(f=>f.checked);
+      const selected = featureData.filter(f=>document.getElementById('feat_'+f.id).checked);
       if(selected.length===0){alert('Selecione ao menos uma feature.');return}
 
       document.getElementById('results').style.display='block';
@@ -114,31 +103,24 @@
         bar.style.width='100%';
         document.getElementById('infoRun').innerText='Regressão logística concluída (simulada)';
 
-        // Gerar betas e p-valores simulados
-        const betas = selected.map(f=>{
-          const seed = f.id;
-          const betaVal = (hashStr(seed)*4 - 2).toFixed(2); // valores entre -2 e 2
-          let absBeta = Math.abs(betaVal);
-          // p-valor inversamente proporcional ao tamanho do beta
-          let pval = 1 - Math.min(1, absBeta / 2);
-          // valores acima de 0.50 tornam o p-valor significante
-          if (Math.abs(betaVal) > 0.50) pval *= 0.05;
-          pval = Math.max(0.001, Math.min(1, pval)).toFixed(3);
-          return {label:f.label,beta:betaVal,pval:pval};
-        });
+        const totalSignificativas = featureData.filter(f=>f.significativa).length;
+        const significativasSelecionadas = selected.filter(f=>f.significativa).length;
+        const significativasPerdidas = totalSignificativas - significativasSelecionadas;
 
-        // Calcular AUC e F1 simulados
-        const numSel = selected.length;
-        const auc = 0.60 + 0.38 * sigmoid((numSel-1)*0.6);
-        const f1 = 0.40 + 0.5 * sigmoid((numSel-1)*0.5);
+        // Cálculo exponencial de queda nas métricas
+        let baseAUC = 0.83;
+        let baseF1 = 0.71;
+        const fator = Math.pow(0.85, significativasPerdidas);
+        const auc = baseAUC * fator + (Math.random()*0.02 - 0.01);
+        const f1 = baseF1 * fator + (Math.random()*0.02 - 0.01);
 
         const tbody = document.querySelector('#betaTable tbody');
         tbody.innerHTML='';
-        for(const r of betas){
+        for(const r of selected){
           const tr = document.createElement('tr');
           const tdA = document.createElement('td'); tdA.innerText = r.label;
-          const tdB = document.createElement('td'); tdB.innerText = r.beta;
-          const tdC = document.createElement('td'); tdC.innerText = r.pval;
+          const tdB = document.createElement('td'); tdB.innerText = r.beta.toFixed(2);
+          const tdC = document.createElement('td'); tdC.innerText = r.pval.toFixed(3);
           tr.appendChild(tdA);tr.appendChild(tdB);tr.appendChild(tdC);
           tbody.appendChild(tr);
         }
@@ -155,5 +137,4 @@
     });
   </script>
 </body>
-
 </html>
