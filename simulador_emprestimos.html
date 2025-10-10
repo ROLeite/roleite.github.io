@@ -72,7 +72,7 @@
 
   <script>
     const featureData = [
-      {id:'tam_emprestimo',label:'Tamanho do empréstimo',beta:-1.25,pval:0.012,significativa:true},
+      {id:'tam_emprestimo',label:'Tamanho do empréstimo',beta:1.25,pval:0.012,significativa:true},
       {id:'score_serasa',label:'Score Serasa',beta:0.35,pval:0.624,significativa:false},
       {id:'capital_social',label:'Capital social',beta:-0.28,pval:0.731,significativa:false},
       {id:'num_func',label:'Número de funcionários',beta:0.41,pval:0.582,significativa:false},
@@ -108,8 +108,8 @@
         const significativasPerdidas = totalSignificativas - significativasSelecionadas;
 
         // Cálculo exponencial de queda nas métricas
-        let baseAUC = 0.83;
-        let baseF1 = 0.71;
+        let baseAUC = 0.87;
+        let baseF1 = 0.75;
         const fator = Math.pow(0.85, significativasPerdidas);
         const auc = baseAUC * fator + (Math.random()*0.02 - 0.01);
         const f1 = baseF1 * fator + (Math.random()*0.02 - 0.01);
@@ -138,3 +138,4 @@
   </script>
 </body>
 </html>
+
