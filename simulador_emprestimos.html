@@ -111,8 +111,8 @@
         let baseAUC = 0.87;
         let baseF1 = 0.75;
         const fator = Math.pow(0.85, significativasPerdidas);
-        const auc = baseAUC * fator + (Math.random()*0.02 - 0.01);
-        const f1 = baseF1 * fator + (Math.random()*0.02 - 0.01);
+        const auc = baseAUC * fator ;
+        const f1 = baseF1 * fator ;
 
         const tbody = document.querySelector('#betaTable tbody');
         tbody.innerHTML='';
@@ -138,4 +138,5 @@
   </script>
 </body>
 </html>
+
 
