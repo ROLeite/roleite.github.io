@@ -49,8 +49,8 @@
 <script>
 // Dados iniciais
 const initialData = [
-  { Lote: "1", País: "Brasil", Valor: "1 Real", Ano: "1994", Material: "Aço Inox", Estado: "Flor de Cunho", Observações: "" },
-  { Lote: "2", País: "EUA", Valor: "1 Dólar", Ano: "1976", Material: "Cobre-Níquel", Estado: "Circulada", Observações: "Comemorativa" }
+  { Lote: "1", País: "Brasil", Valor: "1 Real", "Valor Inicial": "0,50", Ano: "1994", Material: "Aço Inox", Estado: "Flor de Cunho", Observações: "" },
+  { Lote: "2", País: "EUA", Valor: "1 Dólar", "Valor Inicial": "0,25", Ano: "1976", Material: "Cobre-Níquel", Estado: "Circulada", Observações: "Comemorativa" }
 ];
 
 // Carregar do localStorage
@@ -60,7 +60,7 @@ document.getElementById('titleInput').value = catalogTitle;
 
 // Funções utilitárias
 function getColumns(rows) {
-  if (!rows || !rows.length) return ["Lote","País","Valor","Ano","Material","Estado","Observações"];
+  if (!rows || !rows.length) return ["Lote","País","Valor","Valor Inicial","Ano","Material","Estado","Observações"];
   const cols = new Set(["Lote"]);
   rows.forEach(r => Object.keys(r).forEach(k => cols.add(k)));
   cols.delete("Observações");
