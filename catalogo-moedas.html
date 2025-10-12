@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gerenciador de Catálogo de Moedas</title>
+<style>
+  body{font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding:20px;}
+  table{border-collapse:collapse; width:100%; margin-top:12px;}
+  th,td{border:1px solid #ddd; padding:8px; text-align:left;}
+  th{background:#f2f2f2;}
+  input[type=text], input[type=number]{width:100%; box-sizing:border-box;}
+  .btn{display:inline-block; padding:8px 12px; margin:6px 4px; border-radius:6px; cursor:pointer; border:1px solid #888; background:#fff;}
+  .btn-primary{background:#007bff; color:white; border-color:#007bff;}
+  .btn-danger{background:#dc3545; color:white; border-color:#dc3545;}
+  .actions{margin-top:12px;}
+  .small{font-size:0.9em; color:#555;}
+  .search{margin-bottom:8px;}
+  #titleInput{width:100%; font-size:1.2em; padding:8px; margin-top:10px; box-sizing:border-box;}
+</style>
+</head>
+<body>
+<h1>Gerenciador de Catálogo de Moedas</h1>
+<p class="small">Edite diretamente, adicione linhas, filtre e gere uma página pronta para impressão.</p>
+
+<label for="titleInput"><strong>Título do catálogo:</strong></label>
+<input type="text" id="titleInput" placeholder="Ex: Coleção de Moedas Brasileiras – 1900 a 2025">
+
+<div class="actions">
+  <button class="btn btn-primary" id="addRow">➕ Adicionar linha</button>
+  <button class="btn" id="downloadJson">💾 Exportar JSON</button>
+  <button class="btn" id="importJson">📂 Importar JSON</button>
+  <button class="btn" id="generatePrint">🖨️ Gerar página para impressão</button>
+  <button class="btn btn-danger" id="clearAll">🗑️ Limpar tudo</button>
+  <input type="file" id="fileInput" accept="application/json" style="display:none;">
+</div>
+
+<div class="search">
+  <label>Filtro (pesquise por qualquer texto): 
+    <input type="text" id="filterInput" placeholder="Ex.: Brasil, 1 Real, 1994">
+  </label>
+</div>
+
+<table id="catalogTable" aria-label="Catálogo de moedas">
+  <thead id="thead"></thead>
+  <tbody id="tbody"></tbody>
+</table>
+
+<script>
+// Dados iniciais
+const initialData = [
+  { Lote: "1", País: "Brasil", Valor: "1 Real", Ano: "1994", Material: "Aço Inox", Estado: "Flor de Cunho", Observações: "" },
+  { Lote: "2", País: "EUA", Valor: "1 Dólar", Ano: "1976", Material: "Cobre-Níquel", Estado: "Circulada", Observações: "Comemorativa" }
+];
+
+// Carregar do localStorage
+let data = JSON.parse(localStorage.getItem('catalog_moedas_v1')) || initialData.slice();
+let catalogTitle = localStorage.getItem('catalog_title') || 'Catálogo de Moedas';
+document.getElementById('titleInput').value = catalogTitle;
+
+// Funções utilitárias
+function getColumns(rows) {
+  if (!rows || !rows.length) return ["Lote","País","Valor","Ano","Material","Estado","Observações"];
+  const cols = new Set(["Lote"]);
+  rows.forEach(r => Object.keys(r).forEach(k => cols.add(k)));
+  cols.delete("Observações");
+  cols.add("Observações");
+  return Array.from(cols);
+}
+
+function renderTable(rows) {
+  const thead = document.getElementById('thead');
+  const tbody = document.getElementById('tbody');
+  thead.innerHTML = '';
+  tbody.innerHTML = '';
+  if (!rows) return;
+  const cols = getColumns(rows);
+
+  // Cabeçalho
+  const trHead = document.createElement('tr');
+  cols.forEach(c => {
+    const th = document.createElement('th');
+    th.textContent = c;
+    trHead.appendChild(th);
+  });
+  const thAction = document.createElement('th');
+  thAction.textContent = 'Ações';
+  trHead.appendChild(thAction);
+  thead.appendChild(trHead);
+
+  // Linhas
+  rows.forEach((row, idx) => {
+    const tr = document.createElement('tr');
+    cols.forEach(c => {
+      const td = document.createElement('td');
+      const input = document.createElement('input');
+      input.type = c === "Lote" ? "number" : "text";
+      input.value = row[c] ?? '';
+      input.addEventListener('change', (e) => {
+        data[idx][c] = e.target.value;
+        saveLocal();
+      });
+      td.appendChild(input);
+      tr.appendChild(td);
+    });
+
+    const tdAction = document.createElement('td');
+    const del = document.createElement('button');
+    del.textContent = 'Remover';
+    del.className = 'btn btn-danger';
+    del.addEventListener('click', () => {
+      if(confirm('Remover esta linha?')) {
+        data.splice(idx, 1);
+        saveLocal();
+        renderTable(filteredData());
+      }
+    });
+    tdAction.appendChild(del);
+    tr.appendChild(tdAction);
+    tbody.appendChild(tr);
+  });
+}
+
+function saveLocal() {
+  localStorage.setItem('catalog_moedas_v1', JSON.stringify(data));
+  localStorage.setItem('catalog_title', catalogTitle);
+}
+
+function downloadJson() {
+  const blob = new Blob([JSON.stringify({title: catalogTitle, data}, null, 2)], {type: 'application/json;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'catalogo_moedas.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJson(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const obj = JSON.parse(e.target.result);
+      if (obj.data && Array.isArray(obj.data)) {
+        data = obj.data;
+        catalogTitle = obj.title || 'Catálogo de Moedas';
+        document.getElementById('titleInput').value = catalogTitle;
+        saveLocal();
+        renderTable(filteredData());
+        alert('Importação concluída com sucesso!');
+      } else {
+        alert('O arquivo JSON não possui o formato esperado.');
+      }
+    } catch(err) {
+      alert('Erro ao ler o arquivo: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function buildPrintHtml(rows) {
+  const cols = getColumns(rows);
+  const rowsHtml = rows.map(r => {
+    return `<tr>${cols.map(c => `<td>${String(r[c] ?? '')}</td>`).join('')}</tr>`;
+  }).join('\n');
+  return `<!doctype html><html lang="pt-BR">
+  <head><meta charset="utf-8"><title>${catalogTitle}</title>
+  <style>
+    body{font-family:system-ui, Arial; padding:20px;}
+    table{border-collapse:collapse; width:100%;}
+    th,td{border:1px solid #222; padding:6px; text-align:left;}
+    th{background:#eee;}
+    h1{text-align:center; margin-bottom:15px;}
+    @media print {button{display:none}}
+  </style>
+  </head>
+  <body>
+    <h1>${catalogTitle}</h1>
+    <p>Gerado em: ${new Date().toLocaleString()}</p>
+    <table><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+    <tbody>${rowsHtml}</tbody></table>
+    <div style="margin-top:20px;"><button onclick="window.print()">Imprimir</button></div>
+  </body></html>`;
+}
+
+function generatePrint() {
+  const html = buildPrintHtml(filteredData());
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+}
+
+function filteredData() {
+  const q = document.getElementById('filterInput').value.trim().toLowerCase();
+  if (!q) return data;
+  return data.filter(r => Object.values(r).join(' ').toLowerCase().includes(q));
+}
+
+// Eventos
+document.getElementById('titleInput').addEventListener('input', e => {
+  catalogTitle = e.target.value || 'Catálogo de Moedas';
+  saveLocal();
+});
+
+document.getElementById('addRow').addEventListener('click', () => {
+  const cols = getColumns(data.length ? data : [{}]);
+  const newRow = {};
+  cols.forEach(c => newRow[c] = '');
+  newRow["Lote"] = data.length ? String(data.length + 1) : "1";
+  data.push(newRow);
+  saveLocal();
+  renderTable(filteredData());
+});
+
+document.getElementById('downloadJson').addEventListener('click', downloadJson);
+document.getElementById('generatePrint').addEventListener('click', generatePrint);
+
+document.getElementById('clearAll').addEventListener('click', () => {
+  if(confirm('Limpar todos os dados?')) {
+    data = [];
+    saveLocal();
+    renderTable([]);
+  }
+});
+
+document.getElementById('filterInput').addEventListener('input', () => renderTable(filteredData()));
+
+document.getElementById('importJson').addEventListener('click', () => {
+  document.getElementById('fileInput').click();
+});
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) importJson(file);
+  e.target.value = ''; // reseta input
+});
+
+// Render inicial
+renderTable(data);
+</script>
+</body>
+</html>
