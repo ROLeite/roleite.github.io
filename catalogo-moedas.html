@@ -1,241 +1,670 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Gerenciador de Catálogo de Moedas</title>
-<style>
-  body{font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding:20px;}
-  table{border-collapse:collapse; width:100%; margin-top:12px;}
-  th,td{border:1px solid #ddd; padding:8px; text-align:left;}
-  th{background:#f2f2f2;}
-  input[type=text], input[type=number]{width:100%; box-sizing:border-box;}
-  .btn{display:inline-block; padding:8px 12px; margin:6px 4px; border-radius:6px; cursor:pointer; border:1px solid #888; background:#fff;}
-  .btn-primary{background:#007bff; color:white; border-color:#007bff;}
-  .btn-danger{background:#dc3545; color:white; border-color:#dc3545;}
-  .actions{margin-top:12px;}
-  .small{font-size:0.9em; color:#555;}
-  .search{margin-bottom:8px;}
-  #titleInput{width:100%; font-size:1.2em; padding:8px; margin-top:10px; box-sizing:border-box;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo VSO ABN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+
+        .form-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            margin-right: 5px;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-wrapper label {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .form-section,
+            .actions,
+            .btn {
+                display: none !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .header {
+                background: #667eea;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            table {
+                page-break-inside: auto;
+            }
+
+            table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            table thead {
+                display: table-header-group;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .print-title {
+                display: block !important;
+                text-align: center;
+                font-size: 1.5em;
+                margin: 20px 0;
+                color: #667eea;
+            }
+
+            .regras-page {
+                display: block !important;
+                page-break-before: always;
+                padding: 30px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .regras-page h2 {
+                color: #667eea;
+                text-align: center;
+                margin-bottom: 20px;
+                font-size: 1.5em;
+            }
+
+            .regras-page ol {
+                margin-left: 20px;
+                line-height: 1.8;
+            }
+
+            .regras-page li {
+                margin-bottom: 10px;
+            }
+
+            .regras-page .contato {
+                margin-top: 30px;
+                text-align: center;
+                font-weight: bold;
+                line-height: 1.8;
+            }
+        }
+
+        .print-title {
+            display: none;
+        }
+
+        .regras-page {
+            display: none;
+        }
+
+        @page {
+            margin: 2cm;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
-<h1>Gerenciador de Catálogo de Moedas</h1>
-<p class="small">Edite diretamente, adicione linhas, filtre e gere uma página pronta para impressão.</p>
+    <div class="container">
+        <div class="header">
+            <h1>🪙 Associação Brasileira de Numismática</h1>
+            <p>Fundada em 01/01/1951</p>
+        </div>
 
-<label for="titleInput"><strong>Título do catálogo:</strong></label>
-<input type="text" id="titleInput" placeholder="Ex: Coleção de Moedas Brasileiras – 1900 a 2025">
+        <div class="content">
+            <div class="form-section">
+                <h2>Configurações do Catálogo</h2>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="tituloCatalogo">Título do Catálogo (para impressão)</label>
+                    <input type="text" id="tituloCatalogo" value="Catálogo VSO ABN" style="font-size: 1.1em;">
+                </div>
+            </div>
 
-<div class="actions">
-  <button class="btn btn-primary" id="addRow">➕ Adicionar linha</button>
-  <button class="btn" id="downloadJson">💾 Exportar JSON</button>
-  <button class="btn" id="importJson">📂 Importar JSON</button>
-  <button class="btn" id="generatePrint">🖨️ Gerar página para impressão</button>
-  <button class="btn btn-danger" id="clearAll">🗑️ Limpar tudo</button>
-  <input type="file" id="fileInput" accept="application/json" style="display:none;">
-</div>
+            <div class="form-section">
+                <h2 id="formTitle">Adicionar Nova Moeda</h2>
+                <form id="moedaForm">
+                    <input type="hidden" id="editIndex" value="-1">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="numeroLote">Número do Lote *</label>
+                            <input type="text" id="numeroLote" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pais">País *</label>
+                            <input type="text" id="pais" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ano">Ano *</label>
+                            <input type="text" id="ano" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="estado">Estado *</label>
+                            <select id="estado" required>
+                                <option value="">Selecione...</option>
+                                <option value="FC">FC - Flor de Cunho</option>
+                                <option value="Sob/FC">Sob/FC - Soberba/Flor de Cunho</option>
+                                <option value="Sob">Sob - Soberba</option>
+                                <option value="MBC+">MBC+ - Muito Bem Conservada +</option>
+                                <option value="MBC">MBC - Muito Bem Conservada</option>
+                                <option value="MBC-">MBC- - Muito Bem Conservada -</option>
+                                <option value="BC+">BC+ - Bem Conservada +</option>
+                                <option value="BC">BC - Bem Conservada</option>
+                                <option value="BC-">BC- - Bem Conservada -</option>
+                                <option value="R/BC">R/BC - Regular/Bem Conservada</option>
+                                <option value="R">R - Regular</option>
+                                <option value="UTG">UTG - Un-Collectable</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="lanceInicial">Lance Inicial (R$) *</label>
+                            <input type="number" id="lanceInicial" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descricao">Descrição do Lote *</label>
+                        <textarea id="descricao" required></textarea>
+                    </div>
+                    <div class="actions" style="margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary" id="btnSubmit">Adicionar Moeda</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelarEdicao()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
 
-<div class="search">
-  <label>Filtro (pesquise por qualquer texto): 
-    <input type="text" id="filterInput" placeholder="Ex.: Brasil, 1 Real, 1994">
-  </label>
-</div>
+            <div class="actions">
+                <div class="file-input-wrapper">
+                    <label for="fileInput" class="btn btn-success">📁 Carregar Catálogo</label>
+                    <input type="file" id="fileInput" accept=".json" onchange="carregarArquivo(event)">
+                </div>
+                <button class="btn btn-success" onclick="salvarArquivo()">💾 Salvar Catálogo</button>
+                <button class="btn btn-primary" onclick="imprimirCatalogo()">🖨️ Imprimir PDF</button>
+            </div>
 
-<table id="catalogTable" aria-label="Catálogo de moedas">
-  <thead id="thead"></thead>
-  <tbody id="tbody"></tbody>
-</table>
+            <div class="print-title">Catálogo VSO ABN</div>
 
-<script>
-// Dados iniciais
-const initialData = [
-  { Lote: "1", País: "Brasil", Valor: "1 Real", "Valor Inicial": "0,50", Ano: "1994", Material: "Aço Inox", Estado: "Flor de Cunho", Observações: "" },
-  { Lote: "2", País: "EUA", Valor: "1 Dólar", "Valor Inicial": "0,25", Ano: "1976", Material: "Cobre-Níquel", Estado: "Circulada", Observações: "Comemorativa" }
-];
+            <div class="table-container">
+                <table id="tabelaMoedas">
+                    <thead>
+                        <tr>
+                            <th>Lote</th>
+                            <th>País</th>
+                            <th>Ano</th>
+                            <th>Descrição</th>
+                            <th>Estado</th>
+                            <th>Lance Inicial</th>
+                            <th class="no-print">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaBody">
+                    </tbody>
+                </table>
+                <div id="emptyState" class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <h3>Nenhuma moeda cadastrada</h3>
+                    <p>Adicione moedas ao catálogo usando o formulário acima</p>
+                </div>
+            </div>
 
-// Carregar do localStorage
-let data = JSON.parse(localStorage.getItem('catalog_moedas_v1')) || initialData.slice();
-let catalogTitle = localStorage.getItem('catalog_title') || 'Catálogo de Moedas';
-document.getElementById('titleInput').value = catalogTitle;
+            <div class="regras-page">
+                <h2>REGRAS GERAIS DAS VENDAS SOB OFERTAS</h2>
+                <ol>
+                    <li>Poderão participar do evento apenas associados da ABN que estiverem em dia com as suas anuidades até a data de realização da VSO;</li>
+                    <li>Em vendas sob ofertas que são transmitidas de forma online através de videoconferência, os associados que estiverem conectados de forma remota poderão lançar suas ofertas através do mecanismo de "chat", que serão lidas em voz alta pelo responsável da venda;</li>
+                    <li>Será permitido a cada associado o direito de ofertar até 200 (duzentas) peças (ou conjunto de peças);</li>
+                    <li>As peças deverão ser listadas e encaminhadas com a antecedência de 30 (trinta) dias em relação ao evento, com a descrição, estado de conservação e preço sugerido;</li>
+                    <li>A Consultoria Técnica poderá rever a classificação do estado de conservação, comunicando aos donos das peças as eventuais retificações;</li>
+                    <li>Os exemplares relacionados estarão expostos a partir da 14:00 horas no local do evento;</li>
+                    <li>As ofertas serão em reais, sem centavos;</li>
+                    <li>Os incrementos mínimos serão os seguintes:<br>
+                        até R$ 99,00: R$ 1,00;<br>
+                        de R$ 100,00 até R$ 495,00: R$ 5,00;<br>
+                        de R$ 500,00 até R$ 990,00: R$ 10,00;<br>
+                        de R$ 1.000,00 em diante: R$ 20,00;
+                    </li>
+                    <li>Os lances externos poderão ser enviados por telefone, carta, fax ou e-mail, devendo chegar até 2 (duas) horas antes do início da realização do evento;</li>
+                    <li>Os valores sugeridos na lista são considerados valores de referência, pelos quais o vendedor é obrigado a vender a peça, pelo maior lance apurado;</li>
+                    <li>Poderão ser apresentados lances abaixo do valor de referência, dentro do limite de até 30% (trinta) do valor inicial, mas reserva-se ao vendedor o direito de com ele concordar, ou não, e considerar vendida, ou não, a peça;</li>
+                    <li>A ABN apresentará o resultado das vendas em até 2 (dois) dias úteis contados a partir da última sessão que se realizar e os compradores disporão de 3 (três) dias úteis, contados a partir da disponibilização do resultado, para liquidar as operações;</li>
+                    <li>Após o recebimento de cheque ou pela confirmação do depósito correspondente, as remessas serão feitas por SEDEX com seguro, salvo solicitação em contrário, à conta e risco do comprador;</li>
+                    <li>O comprador terá 5 (cinco) dias da data do recebimento para a pertinente reclamação, que só será considerada em casos de divergência flagrante entre a listagem e a peça;</li>
+                    <li>Decorrido este prazo e, em não havendo reclamação, a ABN liquidará a operação com o proprietário da peça;</li>
+                    <li>Em caso de eventual reclamação, caberá à ABN o julgamento se esta se justifica;</li>
+                    <li>Os proprietários de peças, adquiridas por lances externos, só serão reembolsados após o crédito em conta da ABN, do valor correspondente à devolução;</li>
+                    <li>Será cobrado dos proprietários das peças vendidas:<br>
+                        a) 5% sobre o valor das peças de ouro; e<br>
+                        b) 10% sobre o valor das demais peças;
+                    </li>
+                    <li>A ABN responsabiliza-se pelo:<br>
+                        a) recebimento dos pagamentos por parte dos compradores;<br>
+                        b) envio das peças vendidas aos compradores, observado o item 12 acima; e<br>
+                        c) pagamento aos proprietários das peças;
+                    </li>
+                    <li>Excepcionalmente serão parcelados os pagamentos das compras acima de R$ 10.000,00, à exceção das peças em ouro, em três parcelas iguais;</li>
+                </ol>
+                <div class="contato">
+                    <p>Reservas, inscrições, informações e lances:</p>
+                    <p>Rua da Alfândega, 81 A sala 502, Centro - CEP.: 20.070-003 ou</p>
+                    <p>E-mail: abnumisrio@gmail.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-// Funções utilitárias
-function getColumns(rows) {
-  if (!rows || !rows.length) return ["Lote","País","Valor","Valor Inicial","Ano","Material","Estado","Observações"];
-  const cols = new Set(["Lote"]);
-  rows.forEach(r => Object.keys(r).forEach(k => cols.add(k)));
-  cols.delete("Observações");
-  cols.add("Observações");
-  return Array.from(cols);
-}
+    <div id="toast" class="toast"></div>
 
-function renderTable(rows) {
-  const thead = document.getElementById('thead');
-  const tbody = document.getElementById('tbody');
-  thead.innerHTML = '';
-  tbody.innerHTML = '';
-  if (!rows) return;
-  const cols = getColumns(rows);
+    <script>
+        let moedas = [];
 
-  // Cabeçalho
-  const trHead = document.createElement('tr');
-  cols.forEach(c => {
-    const th = document.createElement('th');
-    th.textContent = c;
-    trHead.appendChild(th);
-  });
-  const thAction = document.createElement('th');
-  thAction.textContent = 'Ações';
-  trHead.appendChild(thAction);
-  thead.appendChild(trHead);
+        function mostrarToast(mensagem) {
+            const toast = document.getElementById('toast');
+            toast.textContent = mensagem;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
 
-  // Linhas
-  rows.forEach((row, idx) => {
-    const tr = document.createElement('tr');
-    cols.forEach(c => {
-      const td = document.createElement('td');
-      const input = document.createElement('input');
-      input.type = c === "Lote" ? "number" : "text";
-      input.value = row[c] ?? '';
-      input.addEventListener('change', (e) => {
-        data[idx][c] = e.target.value;
-        saveLocal();
-      });
-      td.appendChild(input);
-      tr.appendChild(td);
-    });
+        function atualizarTabela() {
+            const tbody = document.getElementById('tabelaBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            tbody.innerHTML = '';
+            
+            if (moedas.length === 0) {
+                emptyState.style.display = 'block';
+                document.getElementById('tabelaMoedas').style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                document.getElementById('tabelaMoedas').style.display = 'table';
+                
+                moedas.forEach((moeda, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${moeda.numeroLote}</td>
+                        <td>${moeda.pais}</td>
+                        <td>${moeda.ano}</td>
+                        <td>${moeda.descricao}</td>
+                        <td>${moeda.estado}</td>
+                        <td>R$ ${parseFloat(moeda.lanceInicial).toFixed(2)}</td>
+                        <td class="no-print">
+                            <button class="btn btn-warning" onclick="editarMoeda(${index})">Editar</button>
+                            <button class="btn btn-danger" onclick="removerMoeda(${index})">Remover</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
 
-    const tdAction = document.createElement('td');
-    const del = document.createElement('button');
-    del.textContent = 'Remover';
-    del.className = 'btn btn-danger';
-    del.addEventListener('click', () => {
-      if(confirm('Remover esta linha?')) {
-        data.splice(idx, 1);
-        saveLocal();
-        renderTable(filteredData());
-      }
-    });
-    tdAction.appendChild(del);
-    tr.appendChild(tdAction);
-    tbody.appendChild(tr);
-  });
-}
+        document.getElementById('moedaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const editIndex = parseInt(document.getElementById('editIndex').value);
+            
+            const moeda = {
+                numeroLote: document.getElementById('numeroLote').value,
+                pais: document.getElementById('pais').value,
+                ano: document.getElementById('ano').value,
+                descricao: document.getElementById('descricao').value,
+                estado: document.getElementById('estado').value,
+                lanceInicial: document.getElementById('lanceInicial').value
+            };
+            
+            if (editIndex >= 0) {
+                // Modo edição
+                moedas[editIndex] = moeda;
+                mostrarToast('Moeda atualizada com sucesso!');
+            } else {
+                // Modo adição
+                moedas.push(moeda);
+                mostrarToast('Moeda adicionada com sucesso!');
+            }
+            
+            atualizarTabela();
+            cancelarEdicao();
+        });
 
-function saveLocal() {
-  localStorage.setItem('catalog_moedas_v1', JSON.stringify(data));
-  localStorage.setItem('catalog_title', catalogTitle);
-}
+        function editarMoeda(index) {
+            const moeda = moedas[index];
+            
+            document.getElementById('numeroLote').value = moeda.numeroLote;
+            document.getElementById('pais').value = moeda.pais;
+            document.getElementById('ano').value = moeda.ano;
+            document.getElementById('descricao').value = moeda.descricao;
+            document.getElementById('estado').value = moeda.estado;
+            document.getElementById('lanceInicial').value = moeda.lanceInicial;
+            document.getElementById('editIndex').value = index;
+            
+            document.getElementById('formTitle').textContent = 'Editar Moeda';
+            document.getElementById('btnSubmit').textContent = 'Salvar Alterações';
+            
+            // Scroll suave para o formulário
+            document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
 
-function downloadJson() {
-  const blob = new Blob([JSON.stringify({title: catalogTitle, data}, null, 2)], {type: 'application/json;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'catalogo_moedas.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
+        function cancelarEdicao() {
+            limparFormulario();
+            document.getElementById('editIndex').value = '-1';
+            document.getElementById('formTitle').textContent = 'Adicionar Nova Moeda';
+            document.getElementById('btnSubmit').textContent = 'Adicionar Moeda';
+        }
 
-function importJson(file) {
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const obj = JSON.parse(e.target.result);
-      if (obj.data && Array.isArray(obj.data)) {
-        data = obj.data;
-        catalogTitle = obj.title || 'Catálogo de Moedas';
-        document.getElementById('titleInput').value = catalogTitle;
-        saveLocal();
-        renderTable(filteredData());
-        alert('Importação concluída com sucesso!');
-      } else {
-        alert('O arquivo JSON não possui o formato esperado.');
-      }
-    } catch(err) {
-      alert('Erro ao ler o arquivo: ' + err.message);
-    }
-  };
-  reader.readAsText(file);
-}
+        function limparFormulario() {
+            document.getElementById('moedaForm').reset();
+        }
 
-function buildPrintHtml(rows) {
-  const cols = getColumns(rows);
-  const rowsHtml = rows.map(r => {
-    return `<tr>${cols.map(c => `<td>${String(r[c] ?? '')}</td>`).join('')}</tr>`;
-  }).join('\n');
-  return `<!doctype html><html lang="pt-BR">
-  <head><meta charset="utf-8"><title>${catalogTitle}</title>
-  <style>
-    body{font-family:system-ui, Arial; padding:20px;}
-    table{border-collapse:collapse; width:100%;}
-    th,td{border:1px solid #222; padding:6px; text-align:left;}
-    th{background:#eee;}
-    h1{text-align:center; margin-bottom:15px;}
-    @media print {button{display:none}}
-  </style>
-  </head>
-  <body>
-    <h1>${catalogTitle}</h1>
-    <p>Gerado em: ${new Date().toLocaleString()}</p>
-    <table><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
-    <tbody>${rowsHtml}</tbody></table>
-    <div style="margin-top:20px;"><button onclick="window.print()">Imprimir</button></div>
-  </body></html>`;
-}
+        function removerMoeda(index) {
+            if (confirm('Tem certeza que deseja remover esta moeda?')) {
+                moedas.splice(index, 1);
+                atualizarTabela();
+                mostrarToast('Moeda removida com sucesso!');
+            }
+        }
 
-function generatePrint() {
-  const html = buildPrintHtml(filteredData());
-  const w = window.open('', '_blank');
-  w.document.write(html);
-  w.document.close();
-}
+        function salvarArquivo() {
+            if (moedas.length === 0) {
+                alert('Não há moedas para salvar!');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(moedas, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `catalogo_leilao_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            mostrarToast('Catálogo salvo com sucesso!');
+        }
 
-function filteredData() {
-  const q = document.getElementById('filterInput').value.trim().toLowerCase();
-  if (!q) return data;
-  return data.filter(r => Object.values(r).join(' ').toLowerCase().includes(q));
-}
+        function carregarArquivo(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const dados = JSON.parse(e.target.result);
+                    if (Array.isArray(dados)) {
+                        moedas = dados;
+                        atualizarTabela();
+                        mostrarToast('Catálogo carregado com sucesso!');
+                    } else {
+                        alert('Arquivo inválido!');
+                    }
+                } catch (error) {
+                    alert('Erro ao ler o arquivo: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
 
-// Eventos
-document.getElementById('titleInput').addEventListener('input', e => {
-  catalogTitle = e.target.value || 'Catálogo de Moedas';
-  saveLocal();
-});
+        function imprimirCatalogo() {
+            if (moedas.length === 0) {
+                alert('Não há moedas para imprimir!');
+                return;
+            }
+            
+            // Atualizar o título da impressão
+            const titulo = document.getElementById('tituloCatalogo').value;
+            const printTitle = document.querySelector('.print-title');
+            if (printTitle) {
+                printTitle.textContent = titulo;
+            }
+            
+            window.print();
+        }
 
-document.getElementById('addRow').addEventListener('click', () => {
-  const cols = getColumns(data.length ? data : [{}]);
-  const newRow = {};
-  cols.forEach(c => newRow[c] = '');
-  newRow["Lote"] = data.length ? String(data.length + 1) : "1";
-  data.push(newRow);
-  saveLocal();
-  renderTable(filteredData());
-});
-
-document.getElementById('downloadJson').addEventListener('click', downloadJson);
-document.getElementById('generatePrint').addEventListener('click', generatePrint);
-
-document.getElementById('clearAll').addEventListener('click', () => {
-  if(confirm('Limpar todos os dados?')) {
-    data = [];
-    saveLocal();
-    renderTable([]);
-  }
-});
-
-document.getElementById('filterInput').addEventListener('input', () => renderTable(filteredData()));
-
-document.getElementById('importJson').addEventListener('click', () => {
-  document.getElementById('fileInput').click();
-});
-document.getElementById('fileInput').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file) importJson(file);
-  e.target.value = ''; // reseta input
-});
-
-// Render inicial
-renderTable(data);
-</script>
+        // Inicializar
+        atualizarTabela();
+    </script>
 </body>
 </html>
