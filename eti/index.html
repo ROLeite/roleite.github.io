@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estratégia, Tecnologia e Inovação — Prof. Rodrigo Leite</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --cream: #f5f1eb;
+    --gold: #b8902a;
+    --gold-light: #d4a840;
+    --muted: #6b6560;
+    --rule: #cdc5b8;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 52px 64px 44px;
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  header h1 em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .header-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #a09890;
+    margin-top: 18px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 56px 32px 80px;
+  }
+
+  /* Contact banner */
+  .contact-banner {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--gold);
+    padding: 18px 24px;
+    margin-bottom: 52px;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .contact-banner a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .contact-banner a:hover { text-decoration: underline; }
+
+  /* Section label */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* Class block */
+  .class-block {
+    margin-bottom: 40px;
+  }
+
+  .class-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .class-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .class-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .class-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  /* File rows */
+  .file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 0;
+  }
+
+  .file-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    padding: 13px 18px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+
+  .file-row:hover {
+    border-color: var(--gold);
+    background: #faf7f2;
+  }
+
+  .file-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .file-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .file-name {
+    font-size: 13.5px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .file-desc {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .file-type {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .download-arrow {
+    color: var(--gold);
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+
+  .file-row:hover .download-arrow {
+    transform: translateY(2px);
+  }
+
+  /* Placeholder row (no file yet) */
+  .file-row.placeholder {
+    opacity: 0.45;
+    cursor: default;
+    border-style: dashed;
+    background: transparent;
+  }
+  .file-row.placeholder:hover {
+    border-color: var(--rule);
+    background: transparent;
+  }
+  .file-row.placeholder .download-arrow { display: none; }
+
+  /* Divider */
+  .spacer { height: 20px; }
+
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 32px 20px 28px; }
+    main { padding: 32px 16px 60px; }
+    .class-date { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">COPPEAD / UFRJ — PhD Program</div>
+  <h1>Estratégia, Tecnologia e <em>Inovação</em></h1>
+  <div class="header-meta">
+    <span>Prof. Rodrigo Leite</span>
+    <span>Segundas · 18:30 PM – 19:50 PM</span>
+    <span>30 Mar – 15 Jun, 2026</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="contact-banner">
+    E-mail para contato do Professor:
+    <a href="mailto:rodrigo.oliveira@coppead.ufrj.br">rodrigo.oliveira@coppead.ufrj.br</a>
+  </div>
+
+  <!-- READINGS -->
+  <div class="section-label">Course Topics</div>
+
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Aula 01</span>
+      <span class="class-title">Apresentação da Disciplina e Teorias econômicas da tecnologia </span>
+      <span class="class-date">30 Mar</span>
+    </div>
+
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Aula 02</span>
+      <span class="class-title">A tecnologia nas visões marxista e neoclássica </span>
+      <span class="class-date">6 Abr</span>
+    </div>
+ 
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Aula 03</span>
+      <span class="class-title">A era fordista e a concorrência oligopolista </span>
+      <span class="class-date">13 Abr</span>
+    </div>
+   
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Aula 04</span>
+      <span class="class-title">O pós-fordismo e as novas teorias da firma e da tecnologia </span>
+      <span class="class-date">20 Abr</span>
+    </div>
+
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Aula 05</span>
+      <span class="class-title">Revisão</span>
+      <span class="class-date">27 Abr</span>
+    </div>
+ 
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Aula 06</span>
+      <span class="class-title">Prova 1</span>
+      <span class="class-date">4 Mai/span>
+    </div>
+ 
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Aula 07</span>
+      <span class="class-title">Financial Influencers and Non-Expert Advice</span>
+      <span class="class-date">Apr 7</span>
+    </div>
+  <div class="spacer"></div>
+
+  <!-- ASSIGNMENTS -->
+  <div class="section-label">Assignment Materials</div>
+
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Class 08</span>
+      <span class="class-title">Replication Assignment</span>
+      <span class="class-date">Apr 14</span>
+    </div>
+    <div class="file-list">
+      <a class="file-row" href="assignments/replication-dataset.zip" download>
+        <span class="file-icon">🗂</span>
+        <div class="file-info">
+          <div class="file-name">Replication Dataset</div>
+          <div class="file-desc">Data file for the replication exercise</div>
+        </div>
+        <span class="file-type">ZIP</span>
+        <span class="download-arrow">↓</span>
+      </a>
+      <a class="file-row" href="assignments/replication-instructions.pdf" download>
+        <span class="file-icon">📄</span>
+        <div class="file-info">
+          <div class="file-name">Replication Instructions</div>
+          <div class="file-desc">Guidelines and the published paper to replicate</div>
+        </div>
+        <span class="file-type">PDF</span>
+        <span class="download-arrow">↓</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Class 09</span>
+      <span class="class-title">Paper Review</span>
+      <span class="class-date">TBD</span>
+    </div>
+    <div class="file-list">
+      <a class="file-row" href="assignments/paper-to-review.pdf" download>
+        <span class="file-icon">📄</span>
+        <div class="file-info">
+          <div class="file-name">Manuscript for Review</div>
+          <div class="file-desc">Write a referee report + cover letter for the Editor</div>
+        </div>
+        <span class="file-type">PDF</span>
+        <span class="download-arrow">↓</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Course</span>
+      <span class="class-title">Syllabus</span>
+      <span class="class-date">—</span>
+    </div>
+    <div class="file-list">
+      <a class="file-row" href="syllabus.pdf" download>
+        <span class="file-icon">📋</span>
+        <div class="file-info">
+          <div class="file-name">Course Syllabus</div>
+          <div class="file-desc">Grading, schedule, readings, and policies</div>
+        </div>
+        <span class="file-type">PDF</span>
+        <span class="download-arrow">↓</span>
+      </a>
+    </div>
+  </div>
+
+    <!-- ADDITIONAL STUFF-->
+  <div class="section-label">Additional Stuff</div>
+
+      <div class="class-block">
+    <div class="class-header">
+      <span class="class-number">Course</span>
+      <span class="class-title">Slides and Template</span>
+      <span class="class-date">—</span>
+    </div>
+    <div class="file-list">
+      <a class="file-row" href="slides-intro.pdf" download>
+        <span class="file-icon">📄</span>
+        <div class="file-info">
+          <div class="file-name">Slides - Class 01</div>
+          <div class="file-desc">How to conduct internationally impactful research</div>
+        </div>
+        <span class="file-type">PDF</span>
+        <span class="download-arrow">↓</span>
+      </a>
+      <a class="file-row" href="slides-rejected.pdf" download>
+        <span class="file-icon">📄</span>
+        <div class="file-info">
+          <div class="file-name">Slides - Class 02</div>
+          <div class="file-desc">Why papers get rejected</div>
+        </div>
+        <span class="file-type">PDF</span>
+        <span class="download-arrow">↓</span>
+      </a>
+      <a class="file-row" href="WP-Template.docx" download>
+        <span class="file-icon">📋</span>
+        <div class="file-info">
+          <div class="file-name">Template</div>
+          <div class="file-desc">Template to organize your ideas into a Working Paper</div>
+        </div>
+        <span class="file-type">DOCX</span>
+        <span class="download-arrow">↓</span>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Behavioral Finance · COPPEAD/UFRJ · 2026 &nbsp;·&nbsp; Questions? E-mail rodrigo.oliveira@coppead.ufrj.br
+</footer>
+
+</body>
+</html>
