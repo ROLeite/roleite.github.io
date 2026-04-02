@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM 767 · Financial Accounting · COPPEAD/UFRJ</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f5f0e8;
+    --muted: #5a6278;
+    --border: #c9b98a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    font-family: 'Source Serif 4', Georgia, serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 90%, rgba(26,107,60,0.05) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .page-wrapper {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 820px;
+    padding: 48px 24px 80px;
+  }
+
+  .header { text-align: center; margin-bottom: 52px; }
+
+  .institution-line {
+    font-size: 11px; letter-spacing: 3.5px; text-transform: uppercase;
+    color: var(--gold); font-weight: 300; margin-bottom: 20px; opacity: 0.85;
+  }
+
+  .crest {
+    width: 60px; height: 60px; margin: 0 auto 20px;
+    border: 2px solid var(--gold); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; position: relative;
+  }
+  .crest::before {
+    content: ''; position: absolute; inset: 4px;
+    border: 1px solid rgba(201,168,76,0.4); border-radius: 50%;
+  }
+  .crest-inner {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900; color: var(--gold); letter-spacing: -1px;
+  }
+
+  .course-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px,5vw,44px); font-weight: 700; color: var(--cream);
+    line-height: 1.1; margin-bottom: 10px; letter-spacing: -0.5px;
+  }
+  .course-subtitle { font-size: 14px; color: var(--gold-light); font-style: italic; font-weight: 300; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .course-code { font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+  .divider { display: flex; align-items: center; gap: 16px; margin: 32px auto; max-width: 400px; }
+  .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); }
+  .divider-diamond { width: 6px; height: 6px; border: 1px solid var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+
+  /* Steps */
+  .steps { display: flex; align-items: center; justify-content: center; margin-bottom: 32px; }
+  .step {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); font-weight: 300; transition: color 0.3s;
+  }
+  .step.active { color: var(--gold); }
+  .step.done { color: rgba(201,168,76,0.45); }
+  .step-num {
+    width: 24px; height: 24px; border-radius: 50%; border: 1px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-family: 'Playfair Display', serif; flex-shrink: 0;
+  }
+  .step.active .step-num { background: rgba(201,168,76,0.15); }
+  .step.done .step-num { background: rgba(201,168,76,0.08); }
+  .step-connector { width: 40px; height: 1px; background: rgba(201,168,76,0.2); margin: 0 4px; }
+
+  /* Cards */
+  .card {
+    background: rgba(245,240,232,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px; padding: 40px 48px; margin-bottom: 20px;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .card-label {
+    display: block; font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 20px; font-weight: 300;
+  }
+
+  /* Inputs */
+  .input-row { display: flex; gap: 12px; align-items: stretch; }
+
+  .field-input {
+    flex: 1; background: rgba(10,22,40,0.7);
+    border: 1px solid rgba(201,168,76,0.3); color: var(--cream);
+    font-family: 'Source Serif 4', Georgia, serif; font-size: 16px;
+    padding: 14px 18px; border-radius: 3px; outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .field-input.id-style {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700; letter-spacing: 8px; text-align: center; max-width: 200px;
+  }
+  .field-input::placeholder { color: rgba(201,168,76,0.25); }
+  .field-input.id-style::placeholder { letter-spacing: 6px; font-size: 22px; }
+  .field-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.1); }
+
+  .btn {
+    background: var(--gold); color: var(--navy); border: none;
+    padding: 14px 32px; font-family: 'Source Serif 4', serif; font-size: 13px;
+    font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; border-radius: 3px; transition: background 0.2s, transform 0.1s; white-space: nowrap;
+  }
+  .btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  .field-hint { margin-top: 10px; font-size: 12px; color: var(--muted); font-style: italic; }
+
+  .msg { display: none; padding: 14px 20px; border-radius: 3px; font-size: 13px; margin-top: 12px; font-style: italic; }
+  .msg.visible { display: block; }
+  .msg.error { background: rgba(180,40,40,0.1); border: 1px solid rgba(180,40,40,0.3); color: #e08080; }
+
+  /* Results */
+  .result-panel { display: none; animation: fadeUp 0.5s ease forwards; }
+  .result-panel.visible { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .scores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .score-box {
+    background: rgba(10,22,40,0.5); border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 3px; padding: 20px 24px; text-align: center;
+  }
+  .score-box-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; }
+  .score-value { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 700; line-height: 1; }
+  .score-value.exam { color: var(--cream); }
+  .score-value.grade-A { color: #1a6b3c; text-shadow: 0 0 30px rgba(26,107,60,0.3); }
+  .score-value.grade-B { color: #4a90d9; text-shadow: 0 0 30px rgba(74,144,217,0.3); }
+  .score-value.grade-C { color: #d4a017; }
+  .grade-description { font-size: 11px; color: var(--muted); margin-top: 6px; font-style: italic; }
+
+  /* Stats */
+  .stats-section { display: none; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .stats-section.visible { display: grid; animation: fadeUp 0.6s ease forwards; }
+
+  .chart-card, .avg-card {
+    background: rgba(245,240,232,0.04); border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px; padding: 32px 40px; position: relative; overflow: hidden;
+  }
+  .chart-card::before, .avg-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .chart-title { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; font-weight: 300; }
+  .chart-bars { display: flex; flex-direction: column; gap: 16px; }
+  .bar-row { display: flex; align-items: center; gap: 14px; }
+  .bar-label { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; width: 24px; text-align: center; flex-shrink: 0; }
+  .bar-label.A { color: #1a6b3c; }
+  .bar-label.B { color: #4a90d9; }
+  .bar-label.C { color: #d4a017; }
+  .bar-track { flex: 1; height: 28px; background: rgba(255,255,255,0.04); border-radius: 2px; overflow: hidden; }
+  .bar-fill {
+    height: 100%; border-radius: 2px; display: flex; align-items: center;
+    padding-left: 10px; font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+    transition: width 1.2s cubic-bezier(0.22,1,0.36,1); width: 0;
+  }
+  .bar-fill.A { background: linear-gradient(90deg,#1a6b3c,#2a9a5a); color: rgba(255,255,255,0.9); }
+  .bar-fill.B { background: linear-gradient(90deg,#1a4a8a,#2a6abf); color: rgba(255,255,255,0.9); }
+  .bar-fill.C { background: linear-gradient(90deg,#8a6a1a,#c4982a); color: rgba(255,255,255,0.9); }
+  .bar-count { font-size: 13px; color: var(--muted); min-width: 60px; font-style: italic; }
+
+  .avg-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .avg-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; font-weight: 300; }
+  .avg-value { font-family: 'Playfair Display', serif; font-size: 64px; font-weight: 900; color: var(--cream); line-height: 1; margin-bottom: 8px; }
+  .avg-sub { font-size: 12px; color: var(--muted); font-style: italic; }
+  .avg-bar-container { width: 100%; margin-top: 20px; }
+  .avg-bar-track { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
+  .avg-bar-fill { height: 100%; background: linear-gradient(90deg,var(--gold),var(--gold-light)); border-radius: 2px; transition: width 1.5s cubic-bezier(0.22,1,0.36,1); width: 0; }
+  .avg-scale { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+
+  footer { text-align: center; margin-top: 12px; }
+  .footer-text { font-size: 11px; color: rgba(90,98,120,0.6); letter-spacing: 1px; }
+
+  @media (max-width: 600px) {
+    .card { padding: 24px 20px; }
+    .input-row { flex-direction: column; }
+    .field-input.id-style { max-width: 100%; }
+    .scores-grid, .stats-section { grid-template-columns: 1fr; }
+    .score-value { font-size: 36px; }
+    .avg-value { font-size: 48px; }
+    .step span:not(.step-num) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <header class="header">
+    <div class="institution-line">COPPEAD Graduate School of Business · UFRJ</div>
+    <div class="crest"><span class="crest-inner">C</span></div>
+    <h1 class="course-title">Financial Accounting</h1>
+    <div class="course-subtitle">Full-time MBA Program</div>
+    <div class="course-code">ADM 767</div>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-diamond"></div>
+      <div class="divider-line"></div>
+    </div>
+  </header>
+
+  <div class="steps">
+    <div class="step active" id="step1"><div class="step-num">1</div><span>Student ID</span></div>
+    <div class="step-connector"></div>
+    <div class="step" id="step2"><div class="step-num">2</div><span>Verify E-mail</span></div>
+    <div class="step-connector"></div>
+    <div class="step" id="step3"><div class="step-num">3</div><span>Results</span></div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="card" id="cardId">
+    <span class="card-label">Step 1 · Student Identification</span>
+    <div class="input-row">
+      <input class="field-input id-style" type="text" id="idInput" maxlength="4" placeholder="XXXX" inputmode="numeric" autocomplete="off" />
+      <button class="btn" onclick="submitId()">Continue</button>
+    </div>
+    <div class="field-hint">Enter the last 4 digits of your student ID</div>
+    <div class="msg error" id="idError"></div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="card" id="cardEmail" style="display:none;">
+    <span class="card-label">Step 2 · Identity Verification</span>
+    <div class="input-row">
+      <input class="field-input" type="email" id="emailInput" placeholder="your.email@example.com" autocomplete="off" />
+      <button class="btn" id="verifyBtn" onclick="submitEmail()">Verify</button>
+    </div>
+    <div class="field-hint">Enter the e-mail address registered in the system</div>
+    <div class="msg error" id="emailError"></div>
+  </div>
+
+  <!-- Step 3: Results -->
+  <div class="result-panel" id="resultPanel">
+    <div class="card">
+      <span class="card-label">Your Results</span>
+      <div class="scores-grid">
+        <div class="score-box">
+          <span class="score-box-label">Final Exam</span>
+          <div class="score-value exam" id="examScore">—</div>
+          <div class="grade-description">out of 10.0</div>
+        </div>
+        <div class="score-box">
+          <span class="score-box-label">Final Grade</span>
+          <div class="score-value" id="finalGrade">—</div>
+          <div class="grade-description" id="gradeDesc">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-section" id="statsSection">
+    <div class="chart-card">
+      <div class="chart-title">Grade Distribution · Full Class</div>
+      <div class="chart-bars">
+        <div class="bar-row">
+          <span class="bar-label A">A</span>
+          <div class="bar-track"><div class="bar-fill A" id="barA">28</div></div>
+          <span class="bar-count">28 students</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label B">B</span>
+          <div class="bar-track"><div class="bar-fill B" id="barB">17</div></div>
+          <span class="bar-count">17 students</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label C">C</span>
+          <div class="bar-track"><div class="bar-fill C" id="barC">0</div></div>
+          <span class="bar-count">0 students</span>
+        </div>
+      </div>
+    </div>
+    <div class="avg-card">
+      <div class="avg-label">Class Average · Final Exam</div>
+      <div class="avg-value">8.72</div>
+      <div class="avg-sub">45 students · ADM 767</div>
+      <div class="avg-bar-container">
+        <div class="avg-bar-track"><div class="avg-bar-fill" id="avgBarFill"></div></div>
+        <div class="avg-scale"><span>0</span><span>5</span><span>10</span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-text">COPPEAD · Instituto de Pós-Graduação e Pesquisa em Administração · UFRJ</div>
+  </footer>
+</div>
+
+<script>
+// ── Data layer ────────────────────────────────────────────────────────────────
+// Student records encoded as base64 JSON.
+// Format: [{l: last4, e: examScore, g: grade, h: sha256(SALT+email)}]
+// Emails are NEVER stored in plain text — only salted SHA-256 hashes.
+// Decoding the base64 reveals only hashes, not emails or full IDs.
+const _D="W3sibCI6IjI4MjciLCJlIjo3LjUsImciOiJCIiwiaCI6IjI4MmIwNjRiZTRhNmYyYTEwMjcyZTUzMWJhMTQ2ODVlN2NjOTQyZGY5NTdlNWYzMGE3NzgyZDhiZDYwZWQwN2IifSx7ImwiOiIyODQzIiwiZSI6OC4wLCJnIjoiQiIsImgiOiI0YTVlMGNhZmM2NjI1YWU4MzVjMjU5Y2M3NDYzZWJmMTM2ZGJkM2JlMWMwZDkxZmYwOTlhNDBiZDRjYzliMmZlIn0seyJsIjoiMjg1MSIsImUiOjkuNzUsImciOiJBIiwiaCI6ImY0MjU4OWE1NTAxNmIwMTg4NTQzN2FkMTFjMDM5NDI5YTE3YzMwZjM1MmRjNWNjODMxNWFhMDRkY2UzMWFmMGQifSx7ImwiOiIyODY5IiwiZSI6OS4wLCJnIjoiQSIsImgiOiI4NmZkNTZiMmM0MDVjZGY1NzRkZDllMmQ5MjBjMDRhYmVjYWM3Y2VhNmQwOGRlZDkwMDNjYzJiYzMyNWMxODIzIn0seyJsIjoiMjkwOCIsImUiOjkuMjUsImciOiJBIiwiaCI6IjA1NTlkMGMwMDEyMWZkNDkxZGI1MjI4NjJjM2U4NDFhOGVmNjdmMDI3ZGViYzQ5YjNkYjk5MDRkZTlmZDE4ZjIifSx7ImwiOiIyOTI0IiwiZSI6OC4wLCJnIjoiQiIsImgiOiJhOThkODRlYzBiM2Y0N2NkMjI0MDRmOTE3ODQ3NWJlNTZhZWM1ZWNkNDUzOTc3NTMxNjA0M2M3ZmYxZjJlMzFkIn0seyJsIjoiMzA2OSIsImUiOjguNzUsImciOiJBIiwiaCI6IjdjOWNhMzJkNDM4MjdjYmExYjZlMTE4YTlkMDhlMWY2NzA0N2EyZWM1ZjJlY2FmNGM0OTAzMDUzZTQwNGU2ODMifSx7ImwiOiIyOTY2IiwiZSI6OS4yNSwiZyI6IkEiLCJoIjoiMDIzMzExMjE4YjhjMGU2YWY0YTkxNDQyOTMwZGE0ODQ2ODcwYjQ5NTdlMTU4MDQwZDQyOTYyODM5MWFjOTdhOSJ9LHsibCI6IjMwOTMiLCJlIjo5LjUsImciOiJBIiwiaCI6ImEwNWEzOTgzZjU1OTkyODk3YzQ5MjZjNzM0OTk2NGRlODMxZmQxZjRmOGEyN2UxOTJlZmE2NDg1OTVkYTM0NDkifSx7ImwiOiIzMTA4IiwiZSI6OS41LCJnIjoiQSIsImgiOiIxZTc2YTY0NzhjMjkzZDcwNGE1YTMxM2JhOTRmY2ZjYTE4OGYzNDYxMDUwYWEzNTQyZDIwODExMmVhMDMwNmYxIn0seyJsIjoiMzExNiIsImUiOjkuMjUsImciOiJBIiwiaCI6IjE2OWFlOWQ5YzA2NzczNzlkNTY3ODk4M2E1ZTQwMDNkYmZlY2VkYTU0ZTU2YWEwYjRhODc3ZjJmZDJkYzFiNTAifSx7ImwiOiIzNzUwIiwiZSI6OC43NSwiZyI6IkEiLCJoIjoiNzMzMThmN2IwYzc1YjQxMzhjMGIzNmJhM2Y4ZjkwOTA5MzUyMjhkNmI2YzkwZTc2OTQzYWE1MDkyMWI4MTMwMiJ9LHsibCI6IjM3NjgiLCJlIjo4LjAsImciOiJCIiwiaCI6IjI2NmViMTVkNDRkZjY0OTE2YTcxMmYzMDNhYWJkNDlhNzE2MjlmMzRjMTM5YTlhYmY0NDkwNmVlZDUzOGM3ZGMifSx7ImwiOiIzMTI0IiwiZSI6OS4wLCJnIjoiQSIsImgiOiI5NjRhMWU2NGJiOWRiYTk4NDgyYmQwMGY0YzIwMGJkZjc0ZTYyNjE4OWQyZjYwYjQ2NDFlNzU1MTQ3YWU0NzQyIn0seyJsIjoiMzEzMiIsImUiOjcuNSwiZyI6IkIiLCJoIjoiNzFhN2NmODE3ODY5ZTFkMDVhMjI3ZDE1MzIxNDVlZjgwNjUzMDVkYjA2ZjFiZmIwYjJhNjRjZDVmMDU1ZjUzZiJ9LHsibCI6IjMxNDAiLCJlIjo5LjAsImciOiJCIiwiaCI6IjRhZDg1OGU4OTQ2OWEwYjUzMWFkYWQxZmQ2ZTM1OWIyOGZiZGVlNmVlZGYwM2Q3ZDQ0Mjc1MTgzZjQ0ZmQ1M2UifSx7ImwiOiIzMTU4IiwiZSI6OC41LCJnIjoiQiIsImgiOiJkODZjMDFmNTRiNmUxNjkwYTdhYzZhOWE2ZmYwY2I1MjE1ZmY4OTc0YTEzNTY1YzM2OTI0MWRhN2IzMDA0YWVjIn0seyJsIjoiMzE2NiIsImUiOjcuNSwiZyI6IkIiLCJoIjoiOWJhOGJlODViNjQyYmZiN2UzNDY1ZTkyZDNkY2Y1OTUzZmRjNzQ5YjM5Nzk5MjU2ZDcxNGY5Y2M3YTk0OTFkNSJ9LHsibCI6IjMyMTMiLCJlIjo4Ljc1LCJnIjoiQiIsImgiOiIwZGU1YzI4OWYyNmY5OTM4M2MxNjYxZDVlM2JiMDA2YzI4MGMyYmM2M2M0OGE1MjNkNTVjZmYzMzIxMmZlZDc2In0seyJsIjoiMzIyMSIsImUiOjkuNSwiZyI6IkEiLCJoIjoiNThlYWE0ZDVhNTUwNWY3MWM5NjQ5MGEzNjk5ZGQ4M2I3OTljZTNhOTg2ZTFmN2Y3MmEyYWY4OGJlYTI1OWMzZSJ9LHsibCI6IjMyMzkiLCJlIjo5LjUsImciOiJBIiwiaCI6Ijk4ZDdjMDdjYTcwNTJlM2I0ZDlhOTIyYjdmMTY4ZmE1NzQ1MjNkZDhiMWE2YjJhNzQxZTlmNmJkZTJmMDBkNGUifSx7ImwiOiIzNzg0IiwiZSI6OS4wLCJnIjoiQSIsImgiOiIzMGM4MTQ2OTgwMTUyM2FiNTdhMmY4NmM3ODZkMThiZjgyMzJmMGVkZDYwYjgyMzY0NWM1Mjc4Y2VjY2M2NjE3In0seyJsIjoiMzg3MyIsImUiOjguNzUsImciOiJBIiwiaCI6ImU3Y2E2MTkxYTI1NjYyN2UxNmI3YmZiMGEzZTg3ODQ3MDQ4YWY1Njk2NmNlY2MxMzZjMWE0MmU4NmJiZDE3MzgifSx7ImwiOiIzMjQ3IiwiZSI6Ny43NSwiZyI6IkIiLCJoIjoiMzIwNDM0MTc5Y2JmYTRjN2UyYmY4YjdhYmQ4YmZjODE3YTVmZmExMmFlNmQ2ZGJmODE4N2YyZTU4ZjlkODZiZSJ9LHsibCI6IjMyNjMiLCJlIjo5Ljc1LCJnIjoiQSIsImgiOiJmNDA2NTdjYjljMWRjZGE0YTk1YjgyMTk1MTI2ZjU3MGMyMmFjNGUzMDExOTRhM2Y4ZTc1YTk0NzBjY2Y0MjgyIn0seyJsIjoiMzI3MSIsImUiOjYuNzUsImciOiJCIiwiaCI6ImJlYWM1ZDhkYmQ5NjBjODA0ZjM4YTVhNDAyZjQwMWRmYjAyODg3YzU3OGFjN2JhZjA1YzQyNzliNjFkMmY3MmMifSx7ImwiOiIzMjk3IiwiZSI6OS4wLCJnIjoiQSIsImgiOiJlNWU1NDI3Y2MzY2I1MDc1Y2MyZDc4MWMxMzMwMDdjYTY3ZDVjMWVjZTk2YWYxOGMyMDY4MmNkM2ZiOWEwMDgwIn0seyJsIjoiMzMwMiIsImUiOjguMCwiZyI6IkIiLCJoIjoiNTQzNWY1ZGNiNWM4M2ZhMDNjNmRjNDRmZjEwMGFiNzExNTJkYzBlN2NkOGIwZTljMTA3Njg2OTNlMTFjZjE0OSJ9LHsibCI6IjMzMTAiLCJlIjo5Ljc1LCJnIjoiQSIsImgiOiI2NzRmZDI5YTU5NTI0NzM1NmYxOGNhOTc0NjhkMTFiZWY4MzQzMjRmOGQzM2Q1MmI4NWU3MzNiYjJhNTVlNjZlIn0seyJsIjoiMzMyOCIsImUiOjkuMCwiZyI6IkEiLCJoIjoiMjFkNTAzYWRmMjc1N2Q1N2JhMmM4ODJhYTMwYTc3ZWVkMTgzYmRmYjdmZDIwMTZlZDhjMzkyMjk3NGU3ODJhOCJ9LHsibCI6IjMzNTIiLCJlIjo3LjUsImciOiJCIiwiaCI6ImNhZmZhOGViZDVjOTM1M2U3YTZjNjRjMjdmY2UwNjdhNzI0MzYzNjk1YWJlMzQyMzZlYjUxZGM5YmM5ZTMwNzUifSx7ImwiOiIzNDMzIiwiZSI6OS4wLCJnIjoiQSIsImgiOiI0OWIwNDUxNGMzMzFiZDIzMGUwZGFhOWFmNTc1ZjY2ZWVmNmVjNGFhN2E4Y2ViNDg0ZWI3N2YwYjQzNzVjODdkIn0seyJsIjoiMzQ0MSIsImUiOjkuMjUsImciOiJBIiwiaCI6IjVhMjZiM2M0NDI0ZDU3M2YwMzQ0N2QyM2M4ODg2NDBhOGQxN2I1NTI5ZDAxY2JhOWZiNjdlN2QyNDI0YzdmNDEifSx7ImwiOiIzNDU5IiwiZSI6Ny4yNSwiZyI6IkIiLCJoIjoiYWQ4ZDNkNmQxOTdmZjUxZjQ4NDdjYjRiYTlhZGQ0YjNlNmY3MThlZjE5NzRiNmNhZGM1NGM4ZThjMDZmYTMwYSJ9LHsibCI6IjM0NjciLCJlIjo5Ljc1LCJnIjoiQSIsImgiOiJlMmM0ODBhOWIwODQxYjVhOGM4YmEwNWE5MmFkMDcyYmRlMzc1NzBjNzU1YjA5MDUxYWE4MzlkZjcwMGY3ZDg5In0seyJsIjoiNTc3OCIsImUiOjkuNzUsImciOiJBIiwiaCI6IjkwZDcwMDA5YTYxNjkzMTNhNjAyZGJjNTA5YTgzZmI2ZWI3MzJjMmMzNTQ5YjY2ODQ1MjkxMzUxMDc4ZTYzNTgifSx7ImwiOiIzNTA2IiwiZSI6OC4wLCJnIjoiQiIsImgiOiIwZGFkYWY3ZDU5YTQwYWUzYTZlYzhmOTg5NGQ2NGZkZTQxMGRmNmVhYjcxODkzNmJkY2MxY2ZjNTA3Yzg4YWFmIn0seyJsIjoiMzY5NSIsImUiOjguMCwiZyI6IkIiLCJoIjoiMDZmYTI0ODdhY2RhNTgwMzkxNGY3ODhjNDc1MjEyYzFkYWM5YTJkYzQ4ODA2N2ExYWJkZTY3YTg5ZGUyMzgwNCJ9LHsibCI6IjM3MDAiLCJlIjo3Ljc1LCJnIjoiQiIsImgiOiI1NjU2Mzk3ZGY3OGEwNGU1NGE1YTc5MGE2MGRiOTkwMmRiODQ0OTZlODIyNGZjMWUxMDYzMDVkMjEyOWJmYmI2In0seyJsIjoiMzcxOCIsImUiOjkuMCwiZyI6IkEiLCJoIjoiZWYxZmM1YTAyMWE4NmJkMzExNTZlNGY5YmE5MTA3NDMzMjk2YjA2ZDI4ZDhkNjVkNjdiNmMwMWRmZGMyZjg3YyJ9LHsibCI6IjM3MjYiLCJlIjo5LjUsImciOiJBIiwiaCI6ImUyZDNlZTc2NDc0NGU2ZDYwNTFiM2U2YzQwNDI3MDIyMjNkNTAzYzM0MTM4YTQ4NTJiODlkYWE5ZDFlNTRiOWYifSx7ImwiOiIzNzI2IiwiZSI6OC4wLCJnIjoiQSIsImgiOiI2YjJhMDBhMTNiNjA3ODUyMzE5MmMxZDNkZTkzNThlYWE5ZDc4NTA4MTRjZWNmYjY0YzAzYzQ4YzZiZjgzMTQ4In0seyJsIjoiNjk1MiIsImUiOjkuNSwiZyI6IkEiLCJoIjoiMDk5ZWVlOGE1ZjVkZDI5ODQ5ZjM1YmJlOTQwNzQ5ZjQzZmE2YzUyNWI5OTkxYmIyNGM2ZDIxNDc5ZGI1NjIyMyJ9LHsibCI6IjM4OTkiLCJlIjo5LjUsImciOiJBIiwiaCI6ImZlZTdiNWYwOTAzY2RjNDFiN2NhMDE2MGMwY2FkOWEyZGY2ZDIxYWRiYWI4ODZiMGExMTA5YTc4ZGUxZTg4NmUifSx7ImwiOiIzOTIwIiwiZSI6OS4wLCJnIjoiQSIsImgiOiI3ODE2ZDI5ZjQ0YTU0NGYwMWMwOTRjNjk5OGFjOGVmZDk4YWExMmY1NWE3MGZjMjJlNmQ2OTg3NjNmNzkxOGJiIn1d";
+
+const _S="COPPEAD_ADM767_2024";
+let _R=null, _M=null;
+
+function _load(){
+  if(_R) return;
+  try{ _R=JSON.parse(atob(_D)); }catch(e){ _R=[]; }
+}
+
+async function _h(s){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+
+const _gd={A:'Excellent Performance',B:'Good Performance',C:'Satisfactory Performance'};
+
+function submitId(){
+  _load();
+  const v=document.getElementById('idInput').value.trim();
+  const e=document.getElementById('idError');
+  e.classList.remove('visible');
+  if(v.length!==4||!/^\d{4}$/.test(v)){
+    e.textContent='Please enter exactly 4 numeric digits.';
+    e.classList.add('visible'); return;
+  }
+  _M=_R.filter(r=>r.l===v);
+  if(!_M.length){
+    e.textContent='No student found with those digits. Please verify your ID and try again.';
+    e.classList.add('visible'); return;
+  }
+  document.getElementById('cardId').style.display='none';
+  document.getElementById('cardEmail').style.display='block';
+  document.getElementById('step1').classList.replace('active','done');
+  document.getElementById('step2').classList.add('active');
+  document.getElementById('emailInput').focus();
+}
+
+async function submitEmail(){
+  const raw=document.getElementById('emailInput').value.trim().toLowerCase();
+  const e=document.getElementById('emailError');
+  e.classList.remove('visible');
+  if(!raw||!raw.includes('@')){
+    e.textContent='Please enter a valid e-mail address.';
+    e.classList.add('visible'); return;
+  }
+  const btn=document.getElementById('verifyBtn');
+  btn.disabled=true; btn.textContent='Verifying…';
+  const hash=await _h(_S+raw);
+  const found=_M.find(r=>r.h===hash);
+  btn.disabled=false; btn.textContent='Verify';
+  if(!found){
+    e.textContent='E-mail does not match our records. Please try again.';
+    e.classList.add('visible'); return;
+  }
+  document.getElementById('cardEmail').style.display='none';
+  document.getElementById('step2').classList.replace('active','done');
+  document.getElementById('step3').classList.add('active');
+  const ex=found.e, gr=found.g;
+  document.getElementById('examScore').textContent=Number.isInteger(ex)?ex.toFixed(1):ex;
+  const gel=document.getElementById('finalGrade');
+  gel.textContent=gr; gel.className='score-value grade-'+gr;
+  document.getElementById('gradeDesc').textContent=_gd[gr]||'';
+  document.getElementById('resultPanel').classList.add('visible');
+  const st=document.getElementById('statsSection');
+  st.classList.add('visible');
+  setTimeout(()=>{
+    document.getElementById('barA').style.width=(28/45*100)+'%';
+    document.getElementById('barB').style.width=(17/45*100)+'%';
+    document.getElementById('barC').style.width='0%';
+    document.getElementById('avgBarFill').style.width=(8.72/10*100)+'%';
+  },200);
+  document.getElementById('resultPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('idInput').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'');});
+  document.getElementById('idInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitId();});
+  document.getElementById('emailInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitEmail();});
+});
+</script>
+</body>
+</html>
