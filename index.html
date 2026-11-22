@@ -1,268 +1,612 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rodrigo Leite - Academic Website</title>
-  <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 0;
-      padding: 0;
-      line-height: 1.6;
-      background-color: #f9f9f9;
-      color: #333;
-    }
-    header {
-      background: #2c3e50;
-      color: #fff;
-      padding: 2rem 1rem;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    header p {
-      margin: 0.3rem 0 0;
-      font-size: 1.1rem;
-    }
-    nav {
-      background: #34495e;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      padding: 1rem;
-      display: block;
-    }
-    nav a:hover {
-      background: #2c3e50;
-    }
-    main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    section {
-      margin-bottom: 2.5rem;
-    }
-    h2 {
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 0.3rem;
-      color: #2c3e50;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    ul li {
-      margin-bottom: 0.8rem;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background: #2c3e50;
-      color: #fff;
-      font-size: 0.9rem;
-      margin-top: 2rem;
-    }
-    a {
-      color: #2980b9;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    /* Profile section with image */
-    .profile {
-      display: flex;
-      align-items: flex-start;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .profile img {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #2c3e50;
-    }
-    .profile-text {
-      flex: 1;
-      min-width: 200px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rodrigo Leite</title>
+<meta name="description" content="Rodrigo Leite — Professor of Finance at COPPEAD Graduate Business School, Federal University of Rio de Janeiro.">
+<meta name="theme-color" content="#1b1f22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Base ---------- */
+  :root {
+    --bg: #1b1f22;
+    --fg: #ffffff;
+    --fg-soft: rgba(255,255,255,0.72);
+    --line: #ffffff;
+    --hover: rgba(255,255,255,0.075);
+    --active: rgba(255,255,255,0.175);
+    --panel: rgba(27,31,34,0.88);
+    --ease: 0.325s ease-in-out;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16pt; }
+  @media (max-width: 1680px) { html { font-size: 12pt; } }
+  @media (max-width: 736px)  { html { font-size: 11pt; } }
+  @media (max-width: 360px)  { html { font-size: 10pt; } }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Source Sans 3", "Source Sans Pro", sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.is-preload *, body.is-preload *::before, body.is-preload *::after { transition: none !important; animation: none !important; }
+
+  a { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,0.5); transition: border-color 0.2s, color 0.2s; }
+  a:hover { border-bottom-color: transparent; color: #fff; }
+  strong, b { font-weight: 600; color: #fff; }
+  em, i { font-style: italic; }
+  p { margin: 0 0 2rem; }
+
+  h1, h2, h3, h4 { font-weight: 600; text-transform: uppercase; line-height: 1.5; margin: 0 0 1rem; }
+  h1 { font-size: 2.25rem; letter-spacing: 0.5rem; line-height: 1.3; }
+  h2 { font-size: 1.5rem; letter-spacing: 0.5rem; }
+  h2.major { display: inline-block; border-bottom: 1px solid var(--line); padding-bottom: 0.5rem; margin-bottom: 2rem; width: max-content; padding-right: 0.5rem; }
+  h3 { font-size: 1rem; letter-spacing: 0.2rem; margin-top: 2.5rem; }
+  @media (max-width: 736px) {
+    h1 { font-size: 1.75rem; letter-spacing: 0.35rem; }
+    h2 { font-size: 1.25rem; letter-spacing: 0.35rem; }
+  }
+
+  /* ---------- Background ---------- */
+  #bg { position: fixed; inset: 0; z-index: 1; }
+  #bg::before, #bg::after { content: ""; position: absolute; inset: 0; }
+  #bg::before {
+    z-index: 2;
+    background:
+      linear-gradient(rgba(19,21,25,0.55), rgba(19,21,25,0.55)),
+      radial-gradient(ellipse at 50% 40%, rgba(19,21,25,0) 0%, rgba(19,21,25,0.6) 85%);
+    transition: background-color 2.5s ease-in-out 0.75s;
+  }
+  body.is-preload #bg::before { background-color: #000; }
+  #bg::after {
+    z-index: 1;
+    transform: scale(1.125);
+    transition: transform var(--ease), filter var(--ease);
+    /* Drop a photo named bg.jpg next to this file to use it as the backdrop; the drawn chart shows otherwise. */
+    background:
+      url("bg.jpg") center / cover no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23263440'/%3E%3Cstop offset='1' stop-color='%23141a1f'/%3E%3C/linearGradient%3E%3Cpattern id='p' width='80' height='80' patternUnits='userSpaceOnUse'%3E%3Cpath d='M80 0H0V80' fill='none' stroke='%23ffffff' stroke-opacity='0.045'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Crect width='1600' height='1000' fill='url(%23p)'/%3E%3Cpolyline fill='none' stroke='%23ffffff' stroke-opacity='0.10' stroke-width='2' points='0,720 80,700 160,735 240,660 320,690 400,610 480,640 560,560 640,600 720,520 800,545 880,470 960,500 1040,420 1120,455 1200,380 1280,410 1360,330 1440,360 1520,290 1600,310'/%3E%3Cpolyline fill='none' stroke='%23ffffff' stroke-opacity='0.06' stroke-width='1.5' points='0,820 100,800 200,840 300,770 400,800 500,730 600,770 700,700 800,740 900,660 1000,700 1100,620 1200,650 1300,580 1400,620 1500,540 1600,570'/%3E%3Cpolyline fill='none' stroke='%23ffffff' stroke-opacity='0.05' stroke-width='1' points='0,560 120,590 240,530 360,575 480,500 600,540 720,470 840,510 960,440 1080,485 1200,420 1320,450 1440,390 1600,420'/%3E%3C/svg%3E") center / cover no-repeat;
+  }
+  body.is-article-visible #bg::after { transform: scale(1.0825); filter: blur(0.2rem); }
+
+  /* ---------- Layout ---------- */
+  #wrapper {
+    position: relative; z-index: 3;
+    min-height: 100vh; width: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    padding: 4rem 2rem;
+  }
+  #wrapper::before { content: ""; display: block; }
+  @media (max-width: 736px) { #wrapper { padding: 2rem 1rem; } }
+
+  /* ---------- Header ---------- */
+  #header {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    max-width: 100%;
+    background-image: radial-gradient(rgba(0,0,0,0.25) 25%, rgba(0,0,0,0) 55%);
+    transition: transform var(--ease), filter var(--ease), opacity var(--ease);
+  }
+  #header > * { position: relative; transition: opacity var(--ease); margin-top: 3.5rem; }
+  #header > *::before { content: ""; display: block; position: absolute; top: -3.5rem; left: calc(50% - 0.5px); width: 1px; height: 3.5rem; background: var(--line); }
+  #header > :first-child { margin-top: 0; }
+  #header > :first-child::before { display: none; }
+
+  #header .logo {
+    width: 8rem; height: 8rem; border-radius: 50%;
+    border: 1px solid var(--line); padding: 0.35rem;
+  }
+  #header .logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; filter: grayscale(0.15); }
+
+  #header .content { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); max-width: 100%; }
+  #header .content .inner {
+    padding: 3rem 2rem; max-height: 40rem; overflow: hidden;
+    transition: max-height 0.75s ease 0.25s, padding 0.75s ease 0.25s, opacity var(--ease) 0.25s;
+  }
+  #header .content p { text-transform: uppercase; letter-spacing: 0.2rem; font-size: 0.8rem; line-height: 2; margin: 0 0 1.25rem; color: var(--fg-soft); }
+  #header .content p strong { color: #fff; font-weight: 400; }
+  #header .content h1 { margin-bottom: 1rem; }
+  body.is-preload #header { filter: blur(0.125rem); }
+  body.is-preload #header > * { opacity: 0; }
+  body.is-preload #header .content .inner { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; }
+  body.is-article-visible #header { transform: scale(0.95); filter: blur(0.1rem); opacity: 0; pointer-events: none; }
+
+  /* Social icons */
+  ul.social { list-style: none; padding: 0; margin: 1.75rem 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+  ul.social a {
+    display: flex; align-items: center; justify-content: center;
+    width: 2.6rem; height: 2.6rem; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.6);
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+  ul.social a:hover { background: var(--hover); border-color: #fff; }
+  ul.social svg { width: 1.1rem; height: 1.1rem; fill: #fff; }
+  ul.social .txt { font-weight: 600; font-size: 0.85rem; letter-spacing: 0.02rem; }
+
+  /* Photo + institution logo row */
+  #header .top-row { display: flex; align-items: center; justify-content: center; gap: 4rem; }
+  #header .content { margin-top: 2.5rem; }
+  #header .content::before { display: none; }
+  .affil { display: block; border-bottom: 0; opacity: 0.92; transition: opacity 0.2s; }
+  .affil:hover { opacity: 1; }
+  .affil img { display: block; height: 6.5rem; width: auto; }
+  @media (max-width: 736px) {
+    #header .top-row { gap: 2.5rem; }
+    .affil img { height: 5.25rem; }
+  }
+
+  /* Nav */
+  #header nav ul {
+    display: flex; list-style: none; padding: 0; margin: 0;
+    border: 1px solid var(--line); border-radius: 4px;
+  }
+  #header nav li { border-left: 1px solid var(--line); }
+  #header nav li:first-child { border-left: 0; }
+  #header nav a {
+    display: block; min-width: 7.5rem; height: 2.75rem; line-height: 2.75rem;
+    padding: 0 1.25rem 0 1.45rem;
+    text-transform: uppercase; letter-spacing: 0.2rem; font-size: 0.8rem;
+    border-bottom: 0; transition: background-color 0.2s;
+  }
+  #header nav a:hover { background: var(--hover); }
+  #header nav a:active { background: var(--active); }
+  @media (max-width: 980px) {
+    #header nav a { min-width: 0; padding: 0 0.9rem 0 1.05rem; font-size: 0.7rem; letter-spacing: 0.15rem; }
+  }
+  @media (max-width: 680px) {
+    #header nav ul { flex-direction: column; min-width: 12rem; }
+    #header nav li { border-left: 0; border-top: 1px solid var(--line); }
+    #header nav li:first-child { border-top: 0; }
+    #header nav a { height: 3rem; line-height: 3rem; font-size: 0.8rem; }
+  }
+
+  /* ---------- Articles (overlay panels) ---------- */
+  #main {
+    display: none; position: relative; z-index: 3;
+    flex-grow: 1; flex-shrink: 1; align-items: center; justify-content: center; flex-direction: column;
+    max-width: 100%;
+  }
+  body.is-article-visible #main { display: flex; }
+  #main article {
+    display: none;
+    position: relative; width: 44rem; max-width: 100%;
+    padding: 4.5rem 2.75rem 1.5rem;
+    background: var(--panel); border-radius: 4px;
+    opacity: 0; transform: translateY(0.25rem);
+    transition: opacity var(--ease), transform var(--ease);
+  }
+  #main article.active { opacity: 1; transform: translateY(0); }
+  @media (max-width: 736px) { #main article { padding: 3.5rem 1.75rem 0.5rem; } }
+  @media (max-width: 480px) { #main article { padding: 3rem 1.25rem 0.5rem; } }
+
+  #main .close {
+    position: absolute; top: 0; right: 0; width: 4rem; height: 4rem;
+    cursor: pointer; border: 0; background: none; padding: 0;
+  }
+  #main .close::before {
+    content: ""; position: absolute; top: 0.75rem; left: 0.75rem; width: 2.5rem; height: 2.5rem; border-radius: 50%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cline x1='2' y1='2' x2='18' y2='18' stroke='%23fff'/%3E%3Cline x1='18' y1='2' x2='2' y2='18' stroke='%23fff'/%3E%3C/svg%3E") center / 20px 20px no-repeat;
+    transition: background-color 0.2s;
+  }
+  #main .close:hover::before { background-color: var(--hover); }
+  #main .close:active::before { background-color: var(--active); }
+
+  /* Article content */
+  .about-wrap { display: flex; gap: 2rem; align-items: flex-start; }
+  .about-wrap img { width: 9rem; height: 9rem; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+  .about-wrap p { text-align: justify; hyphens: auto; }
+  @media (max-width: 600px) { .about-wrap { flex-direction: column; } }
+
+  ul.actions { list-style: none; padding: 0; margin: 0 0 2rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .button {
+    display: inline-block; height: 2.75rem; line-height: 2.75rem; padding: 0 1.25rem 0 1.45rem;
+    border: 0; border-radius: 4px; box-shadow: inset 0 0 0 1px #fff;
+    text-transform: uppercase; letter-spacing: 0.2rem; font-size: 0.7rem; font-weight: 400;
+    white-space: nowrap; transition: background-color 0.2s;
+  }
+  .button:hover { background: var(--hover); }
+
+  ol.pubs { list-style: none; padding: 0; margin: 0 0 2rem; }
+  ol.pubs li { padding: 1rem 0 1rem 4.25rem; border-top: 1px solid rgba(255,255,255,0.15); position: relative; line-height: 1.55; }
+  ol.pubs li:first-child { border-top: 0; padding-top: 0.25rem; }
+  ol.pubs li:first-child .yr { top: 0.3rem; }
+  ol.pubs .yr { position: absolute; left: 0; top: 1.05rem; font-weight: 600; letter-spacing: 0.12rem; font-size: 0.85rem; }
+  ol.pubs .title { display: block; font-style: italic; color: #fff; font-weight: 400; }
+  ol.pubs .auth { display: block; color: var(--fg-soft); font-size: 0.92rem; }
+  ol.pubs .venue { display: block; font-size: 0.92rem; color: var(--fg-soft); }
+  ol.pubs .venue b { color: #fff; font-weight: 600; }
+  ol.pubs .status { display: inline-block; margin-top: 0.3rem; font-size: 0.65rem; letter-spacing: 0.15rem; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.5); border-radius: 3px; padding: 0 0.5rem; }
+  ol.pubs .links { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin-top: 0.35rem; font-size: 0.7rem; letter-spacing: 0.15rem; text-transform: uppercase; }
+  @media (max-width: 480px) {
+    ol.pubs li { padding-left: 0; }
+    ol.pubs .yr { position: static; display: block; }
+  }
+
+  ul.plain { padding-left: 1.1rem; margin: 0 0 2rem; }
+  ul.plain li { margin-bottom: 0.5rem; padding-left: 0.25rem; }
+  ul.plain .when { color: var(--fg-soft); }
+
+  dl.contact { margin: 0 0 2rem; }
+  dl.contact dt { text-transform: uppercase; letter-spacing: 0.2rem; font-size: 0.75rem; font-weight: 600; margin-top: 1.25rem; }
+  dl.contact dd { margin: 0.25rem 0 0; color: var(--fg-soft); }
+
+  /* ---------- Footer ---------- */
+  #footer { position: relative; z-index: 3; width: 100%; max-width: 100%; margin-top: 2rem; text-align: center; transition: transform var(--ease), filter var(--ease), opacity var(--ease); }
+  #footer p { margin: 0; font-size: 0.6rem; letter-spacing: 0.2rem; text-transform: uppercase; opacity: 0.75; }
+  body.is-article-visible #footer { transform: scale(0.95); filter: blur(0.1rem); opacity: 0; }
+  body.is-preload #footer { opacity: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+  }
+</style>
 </head>
-<body>
-  <header>
-    <h1>Rodrigo Leite</h1>
-    <p>Assistant Professor of Finance (with tenure)</p>
-	<p>COPPEAD Graduate Business School, Federal University of Rio de Janeiro</p>
-    <p><a href="mailto:rodrigo.oliveira@coppead.ufrj.br" style="color:#ecf0f1;">rodrigo.oliveira@coppead.ufrj.br</a></p>
+<body class="is-preload">
+<div id="wrapper">
+
+  <!-- Header -->
+  <header id="header">
+    <div class="top-row">
+      <div class="logo"><img src="Rodrigo_Leite-1.jpg" alt="Rodrigo Leite"></div>
+      <a class="affil" href="https://ufrj.br" target="_blank" rel="noopener" title="Universidade Federal do Rio de Janeiro"><img src="ufrj-logo-white.png" alt="UFRJ — Universidade Federal do Rio de Janeiro"></a>
+    </div>
+    <div class="content">
+      <div class="inner">
+        <h1>Rodrigo Leite</h1>
+        <p><strong>Assistant Professor of Finance (with tenure)</strong><br>
+        COPPEAD Graduate Business School<br>Federal University of Rio de Janeiro</p>
+        <ul class="social">
+          <li><a href="https://www.dropbox.com/scl/fi/syi4kvno26u0w94cydfq4/CV_new.pdf?rlkey=ksi1t4m70dxtkaqoo6s2qdrsc&amp;dl=0" target="_blank" rel="noopener" title="CV (English)" aria-label="CV (English)">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5zM8 12h8v1.5H8zm0 3h8v1.5H8zm0-6h3v1.5H8z"/></svg></a></li>
+          <li><a href="https://scholar.google.com.br/citations?user=sNdNDm0AAAAJ&amp;hl=en" target="_blank" rel="noopener" title="Google Scholar" aria-label="Google Scholar">
+            <svg viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 9-4.91V17h2V9zm-6.18 9.4v3.35L12 19l6.18-3.25V12.4L12 15.77z"/></svg></a></li>
+          <li><a href="http://lattes.cnpq.br/6311046333892924" target="_blank" rel="noopener" title="Lattes CV (Portuguese)" aria-label="Lattes CV (Portuguese)"><span class="txt">L</span></a></li>
+          <li><a href="https://ideas.repec.org/top/top.brazil.html#authors10" target="_blank" rel="noopener" title="RePEc ranking" aria-label="RePEc ranking">
+            <svg viewBox="0 0 24 24"><path d="M3 20h18v1.5H3zM5 17l4-5 3.5 3L18 7.5l1.2 1L12.7 17 9.2 14l-3 3.8z"/></svg></a></li>
+          <li><a href="https://www.linkedin.com/in/rodrigo-de-oliveira-leite-ba69b77b" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4V21H3zM9.5 9.75h3.8v1.6h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1V21h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6V21h-4z"/></svg></a></li>
+          <li><a href="mailto:rodrigo.oliveira@coppead.ufrj.br" title="Email" aria-label="Email">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 5-8-5V6l8 5 8-5z"/></svg></a></li>
+        </ul>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#workingpapers">Working Papers</a></li>
+        <li><a href="#awards">Recognition</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <nav>
-    <a href="#about">About</a>
-    <a href="#links">Links</a>
-    <a href="#publications">Publications</a>
-    <a href="#workingpapers">Working Papers</a>
-    <a href="#awards">Recognition & Awards</a>
-    <a href="#contact">Contact</a>
-  </nav>
+  <!-- Main -->
+  <div id="main">
 
-  <main>
-    <section id="about">
-      <h2>About Me</h2>
-      <div class="profile">
-        <img src="Rodrigo_Leite-1.jpg" alt="Profile Picture">
-        <div class="profile-text">
-          <p style="text-align: justify;">
-Much of my research is motivated by questions in financial economics, though my work also deals in the fields of accounting, psychology and public policy. I am interested in understanding how humans make financial decisions and the roles of certain biases on the decision-making process, including how these biases may affect the performance of individuals and groups. My topics of interest also include the dynamics of financial institutions and disadvantaged groups, especially regarding microfinance and microcredit. Finally, a new topic of research that I am pursuing  is regarding the efficiency of public procurement processes and state-owned enterprises. My research has been published in journals in the fields of finance, business, and accounting such as the Journal of Public Administration Research and Theory, Journal of Business Ethics, The International Journal of Accounting, Accounting Forum, International Journal of Finance and Economics, and Finance Research Letters. I am also rated in the upper quartile of Brazilian economic researchers, in the last 10 years, at the <a href="https://ideas.repec.org/top/top.brazil.html#authors10">RePEc ranking</a>. 
-          </p>
+    <!-- About -->
+    <article id="about">
+      <h2 class="major">About</h2>
+      <div class="about-wrap">
+        <img src="Rodrigo_Leite-1.jpg" alt="Rodrigo Leite">
+        <div>
+          <p>Much of my research is motivated by questions in financial economics, though my work also deals in the fields of accounting, psychology and public policy. I am interested in understanding how humans make financial decisions and the roles of certain biases on the decision-making process, including how these biases may affect the performance of individuals and groups. My topics of interest also include the dynamics of financial institutions and disadvantaged groups, especially regarding microfinance and microcredit. Finally, a new topic of research that I am pursuing is regarding the efficiency of public procurement processes and state-owned enterprises.</p>
+          <p>My research has been published in journals in the fields of finance, business, and accounting such as the <em>Journal of Public Administration Research and Theory</em>, <em>Journal of Business Ethics</em>, <em>The International Journal of Accounting</em>, <em>Accounting Forum</em>, <em>International Journal of Finance and Economics</em>, and <em>Finance Research Letters</em>. I am also rated in the upper quartile of Brazilian economic researchers, in the last 10 years, at the <a href="https://ideas.repec.org/top/top.brazil.html#authors10" target="_blank" rel="noopener">RePEc ranking</a>.</p>
         </div>
       </div>
-    </section>
-
- <main>
-    <section id="links">
-      <h2>Links</h2>
-      <ul>
-<a href="https://www.dropbox.com/scl/fi/syi4kvno26u0w94cydfq4/CV_new.pdf?rlkey=ksi1t4m70dxtkaqoo6s2qdrsc&dl=0">CV (in English)</a> | <a href="https://scholar.google.com.br/citations?user=sNdNDm0AAAAJ&hl=en">Google Scholar (507 citations, H-Index = 12)</a></li> | <a href="http://lattes.cnpq.br/6311046333892924">CV (in Portuguese)</a></li> | <a href="https://www.linkedin.com/in/rodrigo-de-oliveira-leite-ba69b77b">LinkedIn</a></li>
-
+      <h3>Links</h3>
+      <ul class="actions">
+        <li><a class="button" href="https://www.dropbox.com/scl/fi/syi4kvno26u0w94cydfq4/CV_new.pdf?rlkey=ksi1t4m70dxtkaqoo6s2qdrsc&amp;dl=0" target="_blank" rel="noopener">CV (English)</a></li>
+        <li><a class="button" href="http://lattes.cnpq.br/6311046333892924" target="_blank" rel="noopener">CV (Portuguese)</a></li>
+        <li><a class="button" href="https://scholar.google.com.br/citations?user=sNdNDm0AAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a></li>
+        <li><a class="button" href="https://www.linkedin.com/in/rodrigo-de-oliveira-leite-ba69b77b" target="_blank" rel="noopener">LinkedIn</a></li>
       </ul>
-    </section>
+      <p style="font-size:0.85rem;color:var(--fg-soft)">Google Scholar: 507 citations, h-index 12.</p>
+    </article>
 
+    <!-- Publications -->
+    <article id="publications">
+      <h2 class="major">Selected Publications</h2>
+      <ol class="pubs">
+        <li><span class="yr">2026</span>
+          <span class="title">State-Owned Enterprises, Public Corporate Governance Codes, and Financial Performance: Evidence from Brazil</span>
+          <span class="auth">L. Pilla, A. Peci, &amp; R. Leite</span>
+          <span class="venue"><b>Corporate Governance: The International Journal of Business in Society</b>, forthcoming</span>
+          <span class="links"><a href="https://doi.org/10.1108/CG-03-2025-0175" target="_blank" rel="noopener">Link</a></span></li>
 
-    <section id="publications">
-      <h2>Selected Publications</h2>
-      <ul style="text-align: justify;">
-	<li>(2026) L. Pilla, A. Peci, & R. Leite. <i>State-Owned Enterprises, Public Corporate Governance Codes, and Financial Performance: Evidence from Brazil</i>. <b>Corporate Governance: The International Journal of Business in Society</b>, forthcoming. <a href="https://doi.org/10.1108/CG-03-2025-0175">Link</a> </li>
-	
-	<li>(2026) R. Leite, F. Moraes, & M. Moura. <i>Pay to Pump: Financial Influencers and Stock Returns</i>. <b>Applied Economics Letters</b>, forthcoming. <a href="https://doi.org/10.1080/13504851.2025.2546061">Link</a> | <a href="https://www.dropbox.com/scl/fi/v5k1h9iu1mi98m8a85ix6/Internet-Appendix-for-Pay-to-Pump_final.pdf?rlkey=200ezqfajeu07ykkj7imsojy6&st=gb1ngqu6&dl=0">Internet Appendix</a></li>
+        <li><span class="yr">2026</span>
+          <span class="title">Pay to Pump: Financial Influencers and Stock Returns</span>
+          <span class="auth">R. Leite, F. Moraes, &amp; M. Moura</span>
+          <span class="venue"><b>Applied Economics Letters</b>, forthcoming</span>
+          <span class="links"><a href="https://doi.org/10.1080/13504851.2025.2546061" target="_blank" rel="noopener">Link</a><a href="https://www.dropbox.com/scl/fi/v5k1h9iu1mi98m8a85ix6/Internet-Appendix-for-Pay-to-Pump_final.pdf?rlkey=200ezqfajeu07ykkj7imsojy6&amp;st=gb1ngqu6&amp;dl=0" target="_blank" rel="noopener">Internet Appendix</a></span></li>
 
-	<li>(2026) M. Moura, R. Leite, R. Cardoso, & L. Alves. <i>The Hidden Costs of Normalized Sports Gambling: Spillover Effects on Financial Risk-Taking and Vulnerability to Fraud</i>. <b>Journal of Behavioral and Experimental Finance</b>, 52: 101277. <a href="https://doi.org/10.1016/j.jbef.2026.101277">Link</a></li>
-		  
-	<li>(2025) L. Pilla, A. Peci, & R. Leite. <i>Financial Performance of State-Owned Enterprises: Does Political Ideology Play a Role?</i> <b>Journal of Public Administration Research and Theory</b> 35(3): 338–351 <a href="https://doi.org/10.1093/jopart/muaf014">Link</a> | <a href="https://dataverse.harvard.edu/citation?persistentId=doi:10.7910/DVN/ZIUW0B">Data and Code</a> | <a href="https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/jpart/35/3/10.1093_jopart_muaf014/1/muaf014_suppl_supplementary_materials.docx?Expires=1762567672&Signature=g~aJ7YE2XN8oGbcA5LCaeKIo2ZMPFJ6cvL~pDeCsl~ye0z6cQVzcPuDiqXwuTNk4rqk-wCVDLq9lxzQZ3stZK7tXhX7Ll30dqnQvDbBxtZAjBqqBFRZi2L5u0SliSDJT97oKnZIZ0moDrDYuue2kD8ZQ9xUbRjPXwyGMEXr2330ijNQpSwsqY6r2mp5RZdAPkxyvCllUqig6pGHg8Rypotw24jru1O4G1rDeSfaIT2Uhm2paLVuIau-rzvtxE6l7HUyBvFlCIwsth3DKwIwsy6J4C4bXSaACa4gGLSa37JRGgHWG65UoxgwDzW8akVexplhn7jIQif52AlPqkJpdxA__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA">Internet Appendix</a></li>
+        <li><span class="yr">2026</span>
+          <span class="title">The Hidden Costs of Normalized Sports Gambling: Spillover Effects on Financial Risk-Taking and Vulnerability to Fraud</span>
+          <span class="auth">M. Moura, R. Leite, R. Cardoso, &amp; L. Alves</span>
+          <span class="venue"><b>Journal of Behavioral and Experimental Finance</b>, 52: 101277</span>
+          <span class="links"><a href="https://doi.org/10.1016/j.jbef.2026.101277" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2025) L. Pilla, A. Peci, & R. Leite. <i>Is the State a Socially Responsible Shareholder? State-Owned Enterprises, Political Ideology, and Corporate Social Performance</i>. <b>Journal of Business Ethics</b>, 197(2): 289-309. <a href="https://link.springer.com/article/10.1007/s10551-024-05751-7">Link</a></li>
+        <li><span class="yr">2025</span>
+          <span class="title">Financial Performance of State-Owned Enterprises: Does Political Ideology Play a Role?</span>
+          <span class="auth">L. Pilla, A. Peci, &amp; R. Leite</span>
+          <span class="venue"><b>Journal of Public Administration Research and Theory</b>, 35(3): 338–351</span>
+          <span class="links"><a href="https://doi.org/10.1093/jopart/muaf014" target="_blank" rel="noopener">Link</a><a href="https://dataverse.harvard.edu/citation?persistentId=doi:10.7910/DVN/ZIUW0B" target="_blank" rel="noopener">Data and Code</a><a href="https://doi.org/10.1093/jopart/muaf014" target="_blank" rel="noopener">Internet Appendix</a></span></li>
 
-	<li>(2025) L. Barcellos, R. Cardoso, & R. Leite. <i>The Effects of Cognitive Reflection and Work Experience on Financial Statement Comparability Under Principles-Based Accounting Standards</i>. <b>Accounting Forum</b>, 49(2): 449-471. <a href="https://www.tandfonline.com/doi/full/10.1080/01559982.2023.2285637">Link</a></li>
+        <li><span class="yr">2025</span>
+          <span class="title">Is the State a Socially Responsible Shareholder? State-Owned Enterprises, Political Ideology, and Corporate Social Performance</span>
+          <span class="auth">L. Pilla, A. Peci, &amp; R. Leite</span>
+          <span class="venue"><b>Journal of Business Ethics</b>, 197(2): 289–309</span>
+          <span class="links"><a href="https://link.springer.com/article/10.1007/s10551-024-05751-7" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2025) R. Leite. <i>The Public Cost of Economic Policy Uncertainty: Evidence from Brazilian Public Procurements</i>. <b>Finance Research Letters</b>, 86(D): 108665.  <a href="https://doi.org/10.1016/j.frl.2025.108665">Link</a> | <a href="https://ars.els-cdn.com/content/image/1-s2.0-S1544612325019191-mmc1.pdf">Internet Appendix</a> </li>
-	
-	<li>(2025) R. Leite, L. Mendes, & I. Coutinho. <i>The Political Economy of Banks’ Cash Holdings</i>. <b>Journal of Economic Studies</b>, 52(8): 1503–1518. <a href="https://www.emerald.com/insight/content/doi/10.1108/jes-08-2024-0550">Link</a></li>
-    
-	<li>(2025) L. Moura, L. Sacramento, R. Leite, & S. Bastos. <i>Mask Usage During Earnings Calls as an Impression Management Tool</i>. <b>Latin American Business Review</b>, 26(3): 213-228. <a href="https://www.tandfonline.com/doi/full/10.1080/10978526.2025.2535946">Link</a></li>
-      
-	<li>(2025) R. Leite, L. Sacramento, & B. Paiva. <i>Competition and Efficiency in Procurement Auctions: Evidence from a Million Brazilian Auctions</i>. <b>Journal of Public Finance and Public Choice</b>, 40(1): 2-22. <a href="https://doi.org/10.1332/25156918Y2024D000000014">Link</a></li>
+        <li><span class="yr">2025</span>
+          <span class="title">The Effects of Cognitive Reflection and Work Experience on Financial Statement Comparability Under Principles-Based Accounting Standards</span>
+          <span class="auth">L. Barcellos, R. Cardoso, &amp; R. Leite</span>
+          <span class="venue"><b>Accounting Forum</b>, 49(2): 449–471</span>
+          <span class="links"><a href="https://www.tandfonline.com/doi/full/10.1080/01559982.2023.2285637" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2024) R. Cardoso, R. Leite, A. Balloni, & T. Fonseca. <i>When Enough is Enough: The Impact of Combined Graphical Impression Management on Financial Judgement</i>. <b>Journal of Behavioral and Experimental Finance</b>, 43: 100969. <a href="https://doi.org/10.1016/j.jbef.2024.100969">Link</a></li>
+        <li><span class="yr">2025</span>
+          <span class="title">The Public Cost of Economic Policy Uncertainty: Evidence from Brazilian Public Procurements</span>
+          <span class="auth">R. Leite</span>
+          <span class="venue"><b>Finance Research Letters</b>, 86(D): 108665</span>
+          <span class="links"><a href="https://doi.org/10.1016/j.frl.2025.108665" target="_blank" rel="noopener">Link</a><a href="https://ars.els-cdn.com/content/image/1-s2.0-S1544612325019191-mmc1.pdf" target="_blank" rel="noopener">Internet Appendix</a></span></li>
 
-	<li>(2024) R. Leite, L. Mendes, & E. Camelo. <i>Innovating Microcredit: How Fintechs Change the Field</i>. <b>Journal of Economics and Business</b>, 128: 106158. <a href="https://www.sciencedirect.com/science/article/pii/S0148619523000516">Link</a></li>
+        <li><span class="yr">2025</span>
+          <span class="title">The Political Economy of Banks’ Cash Holdings</span>
+          <span class="auth">R. Leite, L. Mendes, &amp; I. Coutinho</span>
+          <span class="venue"><b>Journal of Economic Studies</b>, 52(8): 1503–1518</span>
+          <span class="links"><a href="https://www.emerald.com/insight/content/doi/10.1108/jes-08-2024-0550" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2023) R. Cardoso, R. Leite, & A. Aquino. <i>Probable at First Glance, but Unlikely After a Closer Look:  The Role of Cognitive Reflection Ability in the Assessment of Probabilistic Expressions</i>. <b>The International Journal of Accounting</b>, 58(2): 2350004. <a href="https://www.worldscientific.com/doi/10.1142/S109440602350004X">Link</a></li>
+        <li><span class="yr">2025</span>
+          <span class="title">Mask Usage During Earnings Calls as an Impression Management Tool</span>
+          <span class="auth">L. Moura, L. Sacramento, R. Leite, &amp; S. Bastos</span>
+          <span class="venue"><b>Latin American Business Review</b>, 26(3): 213–228</span>
+          <span class="links"><a href="https://www.tandfonline.com/doi/full/10.1080/10978526.2025.2535946" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2022) L. Mendes, R. Leite, & J. Fajardo. <i>Do Contingent Convertible Bonds Reduce Systemic Risk?</i> <b>Journal of International Financial Markets, Institutions and Money</b>, 78: 101554. <a href="https://www.sciencedirect.com/science/article/pii/S1042443122000439">Link</a></li>
+        <li><span class="yr">2025</span>
+          <span class="title">Competition and Efficiency in Procurement Auctions: Evidence from a Million Brazilian Auctions</span>
+          <span class="auth">R. Leite, L. Sacramento, &amp; B. Paiva</span>
+          <span class="venue"><b>Journal of Public Finance and Public Choice</b>, 40(1): 2–22</span>
+          <span class="links"><a href="https://doi.org/10.1332/25156918Y2024D000000014" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2022) W. Cheng, R. Leite, & F. Caldieraro. <i>Financial Contagion in Internet Lending Platforms: Who Pays the Price?</i> <b>Finance Research Letters</b>, 45: 102187. <a href="https://doi.org/10.1016/j.frl.2021.102187">Link</a> | <a href="https://ars.els-cdn.com/content/image/1-s2.0-S1544612321002592-mmc1.pdf">Internet Appendix</a></li>
+        <li><span class="yr">2024</span>
+          <span class="title">When Enough is Enough: The Impact of Combined Graphical Impression Management on Financial Judgement</span>
+          <span class="auth">R. Cardoso, R. Leite, A. Balloni, &amp; T. Fonseca</span>
+          <span class="venue"><b>Journal of Behavioral and Experimental Finance</b>, 43: 100969</span>
+          <span class="links"><a href="https://doi.org/10.1016/j.jbef.2024.100969" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2021) G. Fernandes, L. Mendes, & R. Leite. <i>Cash Holdings and Profitability of Banks in Developed and Emerging Markets</i>. <b>International Review of Economics and Finance</b>, 71: 880-995. <a href="https://www.sciencedirect.com/science/article/abs/pii/S105905602030246X?via%3Dihub">Link</a></li>
+        <li><span class="yr">2024</span>
+          <span class="title">Innovating Microcredit: How Fintechs Change the Field</span>
+          <span class="auth">R. Leite, L. Mendes, &amp; E. Camelo</span>
+          <span class="venue"><b>Journal of Economics and Business</b>, 128: 106158</span>
+          <span class="links"><a href="https://www.sciencedirect.com/science/article/pii/S0148619523000516" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2020) R. Leite, R. Cardoso, A. Jelihovschi, & J. Civitarese. <i>Job Market Compensation for Cognitive Reflection Ability</i>. <b>Research in Economics</b>, 74(1): 87-93. <a href="https://www.sciencedirect.com/science/article/pii/S1090944320300259?via%3Dihub">Link</a></li>
+        <li><span class="yr">2023</span>
+          <span class="title">Probable at First Glance, but Unlikely After a Closer Look: The Role of Cognitive Reflection Ability in the Assessment of Probabilistic Expressions</span>
+          <span class="auth">R. Cardoso, R. Leite, &amp; A. Aquino</span>
+          <span class="venue"><b>The International Journal of Accounting</b>, 58(2): 2350004</span>
+          <span class="links"><a href="https://www.worldscientific.com/doi/10.1142/S109440602350004X" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2020) R. Leite, L. Mendes, & R. Moreira. <i>Profit Status of Microfinance Institutions and Incentives for Earnings Management</i>. <b>Research in International Business and Finance</b>, 54: 101255. <a href="https://www.sciencedirect.com/science/article/abs/pii/S0275531919311201?via%3Dihub">Link</a></li>
+        <li><span class="yr">2022</span>
+          <span class="title">Do Contingent Convertible Bonds Reduce Systemic Risk?</span>
+          <span class="auth">L. Mendes, R. Leite, &amp; J. Fajardo</span>
+          <span class="venue"><b>Journal of International Financial Markets, Institutions and Money</b>, 78: 101554</span>
+          <span class="links"><a href="https://www.sciencedirect.com/science/article/pii/S1042443122000439" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2019) R. Leite, L. Mendes, & L. Sacramento. <i>To Profit or not to Profit? Assessing Financial Sustainability Outcomes of Microfinance Institutions</i>. <b>International Journal of Finance and Economics</b>, 24(3): 1287-1299. <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/ijfe.1718">Link</a></li>
+        <li><span class="yr">2022</span>
+          <span class="title">Financial Contagion in Internet Lending Platforms: Who Pays the Price?</span>
+          <span class="auth">W. Cheng, R. Leite, &amp; F. Caldieraro</span>
+          <span class="venue"><b>Finance Research Letters</b>, 45: 102187</span>
+          <span class="links"><a href="https://doi.org/10.1016/j.frl.2021.102187" target="_blank" rel="noopener">Link</a><a href="https://ars.els-cdn.com/content/image/1-s2.0-S1544612321002592-mmc1.pdf" target="_blank" rel="noopener">Internet Appendix</a></span></li>
 
-	<li>(2019) R. Leite & J. Civitarese. <i>Microfinance for Women: Are There Economic Reasons? Evidence from Latin America</i>. <b>Economics Bulletin</b>, 39(1): 571-580. <a href="https://ideas.repec.org/a/ebl/ecbull/eb-18-00561.html">Link</a></li>
+        <li><span class="yr">2021</span>
+          <span class="title">Cash Holdings and Profitability of Banks in Developed and Emerging Markets</span>
+          <span class="auth">G. Fernandes, L. Mendes, &amp; R. Leite</span>
+          <span class="venue"><b>International Review of Economics and Finance</b>, 71: 880–995</span>
+          <span class="links"><a href="https://www.sciencedirect.com/science/article/abs/pii/S105905602030246X?via%3Dihub" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2018) R. Cardoso, R. Leite, & A. Aquino. <i>The Effect of Cognitive Reflection on the Efficacy of Impression Management: An Experimental Analysis with Financial Analysts</i>. <b>Accounting, Auditing and Accountability Journal </b>, 31(6): 1668-1690. <a href="https://www.emeraldinsight.com/doi/full/10.1108/AAAJ-10-2016-2731">Link</a></li>
+        <li><span class="yr">2020</span>
+          <span class="title">Job Market Compensation for Cognitive Reflection Ability</span>
+          <span class="auth">R. Leite, R. Cardoso, A. Jelihovschi, &amp; J. Civitarese</span>
+          <span class="venue"><b>Research in Economics</b>, 74(1): 87–93</span>
+          <span class="links"><a href="https://www.sciencedirect.com/science/article/pii/S1090944320300259?via%3Dihub" target="_blank" rel="noopener">Link</a></span></li>
 
-	<li>(2016) R. Cardoso, R. Leite, & A. Aquino. <i>A Graph is Worth a Thousand Words: How Overconfidence and Graphical Disclosure of Numerical Information Influence Financial Analysts' Accuracy on Decision Making</i>. <b>PLOS One</b>, 11(8): e0160443. <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0160443">Link</a> | <a href="https://doi.org/10.1371/journal.pone.0160443.s003">Data</a> | <a href="https://doi.org/10.1371/journal.pone.0160443.s004">Code for Main Results</a> | <a href="https://doi.org/10.1371/journal.pone.0160443.s005">Code for Robustness Checks</a></li>
+        <li><span class="yr">2020</span>
+          <span class="title">Profit Status of Microfinance Institutions and Incentives for Earnings Management</span>
+          <span class="auth">R. Leite, L. Mendes, &amp; R. Moreira</span>
+          <span class="venue"><b>Research in International Business and Finance</b>, 54: 101255</span>
+          <span class="links"><a href="https://www.sciencedirect.com/science/article/abs/pii/S0275531919311201?via%3Dihub" target="_blank" rel="noopener">Link</a></span></li>
+
+        <li><span class="yr">2019</span>
+          <span class="title">To Profit or not to Profit? Assessing Financial Sustainability Outcomes of Microfinance Institutions</span>
+          <span class="auth">R. Leite, L. Mendes, &amp; L. Sacramento</span>
+          <span class="venue"><b>International Journal of Finance and Economics</b>, 24(3): 1287–1299</span>
+          <span class="links"><a href="https://onlinelibrary.wiley.com/doi/full/10.1002/ijfe.1718" target="_blank" rel="noopener">Link</a></span></li>
+
+        <li><span class="yr">2019</span>
+          <span class="title">Microfinance for Women: Are There Economic Reasons? Evidence from Latin America</span>
+          <span class="auth">R. Leite &amp; J. Civitarese</span>
+          <span class="venue"><b>Economics Bulletin</b>, 39(1): 571–580</span>
+          <span class="links"><a href="https://ideas.repec.org/a/ebl/ecbull/eb-18-00561.html" target="_blank" rel="noopener">Link</a></span></li>
+
+        <li><span class="yr">2018</span>
+          <span class="title">The Effect of Cognitive Reflection on the Efficacy of Impression Management: An Experimental Analysis with Financial Analysts</span>
+          <span class="auth">R. Cardoso, R. Leite, &amp; A. Aquino</span>
+          <span class="venue"><b>Accounting, Auditing and Accountability Journal</b>, 31(6): 1668–1690</span>
+          <span class="links"><a href="https://www.emeraldinsight.com/doi/full/10.1108/AAAJ-10-2016-2731" target="_blank" rel="noopener">Link</a></span></li>
+
+        <li><span class="yr">2016</span>
+          <span class="title">A Graph is Worth a Thousand Words: How Overconfidence and Graphical Disclosure of Numerical Information Influence Financial Analysts' Accuracy on Decision Making</span>
+          <span class="auth">R. Cardoso, R. Leite, &amp; A. Aquino</span>
+          <span class="venue"><b>PLOS One</b>, 11(8): e0160443</span>
+          <span class="links"><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0160443" target="_blank" rel="noopener">Link</a><a href="https://doi.org/10.1371/journal.pone.0160443.s003" target="_blank" rel="noopener">Data</a><a href="https://doi.org/10.1371/journal.pone.0160443.s004" target="_blank" rel="noopener">Code (Main)</a><a href="https://doi.org/10.1371/journal.pone.0160443.s005" target="_blank" rel="noopener">Code (Robustness)</a></span></li>
+      </ol>
+    </article>
+
+    <!-- Working papers -->
+    <article id="workingpapers">
+      <h2 class="major">Working Papers</h2>
+      <ol class="pubs">
+        <li><span class="yr">2026</span>
+          <span class="title"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5572079" target="_blank" rel="noopener">Hedging Against Uncertainty: Economic Policy Uncertainty and Household Asset Financing</a></span>
+          <span class="auth">R. Leite, F. Moraes, &amp; M. Moura</span>
+          <span class="status">Revise &amp; Resubmit — Review of Asset Pricing Studies</span></li>
+
+        <li><span class="yr">2026</span>
+          <span class="title"><a href="https://dx.doi.org/10.2139/ssrn.7065478" target="_blank" rel="noopener">Who Benefits From Government-backed Debt Renegotiation? Evidence From a Natural Experiment in Brazil</a></span>
+          <span class="auth">R. Leite, L. Mendes, &amp; P. Soares</span>
+          <span class="status">Submitted</span></li>
+
+        <li><span class="yr">2026</span>
+          <span class="title"><a href="https://dx.doi.org/10.2139/ssrn.5136543" target="_blank" rel="noopener">From Noise to Information: The Need for Signal Clarifiers in IPO Markets</a></span>
+          <span class="auth">R. Leite, F. Caldieraro, M. Jardim, &amp; P. Novaes</span>
+          <span class="status">Submitted</span></li>
+
+        <li><span class="yr">2026</span>
+          <span class="title"><a href="https://dx.doi.org/10.2139/ssrn.5526398" target="_blank" rel="noopener">Instant Payment Infrastructure and Entrepreneurship in Underbanked Markets: Quasi-Experimental Evidence from Brazil</a></span>
+          <span class="auth">R. Leite, L. Mendes, &amp; M. Moura</span>
+          <span class="status">Submitted</span></li>
+
+        <li><span class="yr">2025</span>
+          <span class="title">Inflationary Memory, Partisan Identity, and GDP Estimation</span>
+          <span class="auth">R. Dias &amp; R. Leite</span>
+          <span class="status">Work in Progress</span></li>
+      </ol>
+    </article>
+
+    <!-- Recognition -->
+    <article id="awards">
+      <h2 class="major">Recognition</h2>
+      <h3 style="margin-top:0">Grants, Awards &amp; Honors</h3>
+      <ul class="plain">
+        <li>CNPq Research Productivity Fellowship − Level C <span class="when">· 2026, CNPq</span></li>
+        <li>Nominated for the Carolyn Dexter Award for Best International Paper <span class="when">· 2024, Academy of Management</span></li>
+        <li>Top 10 Download List <span class="when">· 2024, Social Science Research Network (SSRN)</span></li>
+        <li>Clovis L. Machado-da-Silva Award <span class="when">· 2023, Brazilian Academy of Management Meeting</span></li>
+        <li>Best Strategy Paper <span class="when">· 2023, Brazilian Academy of Management Meeting</span></li>
+        <li>Young Researcher Fellowship <span class="when">· 2022, FAPERJ</span></li>
+        <li>Top 10 Download List <span class="when">· 2021, Social Science Research Network (SSRN)</span></li>
+        <li>Best Plenary Section Paper <span class="when">· 2018, USP International Conference in Accounting</span></li>
+        <li>Best Accounting Paper <span class="when">· 2016, Brazilian Academy of Management Meeting</span></li>
+        <li>Youngest tenure-track professor of the Federal University of Rio de Janeiro at the time of entering</li>
       </ul>
-    </section>
-
-    <section id="workingpapers">
-      <h2>Working Papers</h2>
-      <ul>
-        <li>(2026) R. Leite, F. Moraes, & M. Moura. <i><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5572079">Hedging Against Uncertainty: Economic Policy Uncertainty and Household Asset Financing</a></i>, Revise and Resubmit at the <b>Review of Asset Pricing Studies</b>. </li>
-		<li>(2026) R. Leite, L. Mendes, & P. Soares <i><a href="https://dx.doi.org/10.2139/ssrn.7065478">Who Benefits From Government-backed Debt Renegotiation? Evidence From a Natural Experiment in Brazil</a></i>, Submitted. </li>
-		<li>(2026) R. Leite, F. Caldieraro, M. Jardim, & P. Novaes. <i><a href="https://dx.doi.org/10.2139/ssrn.5136543">From Noise to Information: The Need for Signal Clarifiers in IPO Markets</a></i>, Submitted. </li>
-		<li>(2026) R. Leite, L. Mendes, & M. Moura. <i><a href="https://dx.doi.org/10.2139/ssrn.5526398">Instant Payment Infrastructure and Entrepreneurship in Underbanked Markets: Quasi-Experimental Evidence from Brazil</a></i>, Submitted. </li>
-		<li>(2025) R. Dias & R. Leite. <i>Inflationary Memory, Partisan Identity, and GDP Estimation</i>, Work in Progress. </li>
+      <h3>Editorial Service</h3>
+      <ul class="plain">
+        <li>Associate Editor, <em>Latin American Business Review</em> <span class="when">· since 2026</span></li>
+        <li>Associate Editor, <em>RAE – Revista de Administração de Empresas</em> <span class="when">· 2024–2026</span></li>
       </ul>
-    </section>
+      <h3>Professional Service</h3>
+      <ul class="plain">
+        <li>Elected Member of the Board of the Brazilian Finance Society <span class="when">· since 2023</span></li>
+        <li>Elected Member of the Board of the Brazilian Academy of Management <span class="when">· 2024–2026</span></li>
+        <li>Elected Member of the Council of the Federal University of Rio de Janeiro <span class="when">· 2020–2023</span></li>
+      </ul>
+    </article>
 
-    <section id="awards">
-      <h2>Recognition & Awards</h2>
-      <p>
-  <h3>Grants, Awards & Honors</h2>
-  <ul>
-    <li>CNPq Research Productivity Fellowship − Level C, 2026, CNPq.</li>
-	<li>Nominated for the Carolyn Dexter Award for Best International Paper, 2024, Academy of Management.</li>
-    <li>Top 10 Download List, 2024, Social Science Research Network (SSRN).</li>
-    <li>Clovis L. Machado-da-Silva Award, 2023, Brazilian Academy of Management Meeting.</li>
-    <li>Best Strategy Paper, 2023, Brazilian Academy of Management Meeting.</li>
-    <li>Young Researcher Fellowship, 2022, FAPERJ.</li>
-    <li>Top 10 Download List, 2021, Social Science Research Network (SSRN).</li>
-    <li>Best Plenary Section Paper, 2018, USP International Conference in Accounting.</li>
-    <li>Best Accounting Paper, 2016, Brazilian Academy of Management Meeting.</li>
-    <li>Youngest tenure-track professor of the Federal University of Rio de Janeiro at the time of entering.</li>
-  </ul>
+    <!-- Contact -->
+    <article id="contact">
+      <h2 class="major">Contact</h2>
+      <dl class="contact">
+        <dt>Email</dt>
+        <dd><a href="mailto:rodrigo.oliveira@coppead.ufrj.br">rodrigo.oliveira@coppead.ufrj.br</a></dd>
+        <dt>Office</dt>
+        <dd>COPPEAD Graduate Business School — Room 408<br>Rua Pascoal Lemme 355<br>21941-918, Rio de Janeiro — Brazil</dd>
+      </dl>
+      <ul class="actions">
+        <li><a class="button" href="mailto:rodrigo.oliveira@coppead.ufrj.br">Send an email</a></li>
+      </ul>
+    </article>
 
-  <h3>Professional Service</h2>
-  <ul>
-    <li>Elected Member of the Board of the Brazilian Finance Society (since 2023).</li>
-    <li>Elected Member of the Board of the Brazilian Academy of Management (2024–2026).</li>
-    <li>Elected Member of the Council of the Federal University of Rio de Janeiro (2020–2023).</li>
-  </ul>
-      </p>
-    </section>
+  </div>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <p>
-        Email: <a href="mailto:rodrigo.oliveira@coppead.ufrj.br">rodrigo.oliveira@coppead.ufrj.br</a><br>
-        Office: Rua Pascoal Lemme 355 Room 408, 21941-918, Rio de Janeiro - Brazil<br>
-      </p>
-    </section>
-  </main>
-
-  <footer>
-    &copy; 2025 Prof. Rodrigo Leite. All rights reserved.
+  <!-- Footer -->
+  <footer id="footer">
+    <p>&copy; <span id="year">2026</span> Rodrigo Leite</p>
   </footer>
+
+</div>
+
+<div id="bg"></div>
+
+<script>
+(function () {
+  var body = document.body,
+      main = document.getElementById('main'),
+      header = document.getElementById('header'),
+      footer = document.getElementById('footer'),
+      articles = main.querySelectorAll('article'),
+      current = null, locked = false, delay = 325;
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Close buttons
+  articles.forEach(function (a) {
+    var b = document.createElement('button');
+    b.className = 'close'; b.setAttribute('aria-label', 'Close');
+    b.addEventListener('click', function () { location.hash = ''; });
+    a.appendChild(b);
+  });
+
+  function show(id, instant) {
+    var art = document.getElementById(id);
+    if (!art || art.parentNode !== main) return;
+    if (locked && !instant) return;
+    locked = true;
+
+    var open = function () {
+      body.classList.add('is-article-visible');
+      header.style.display = 'none'; footer.style.display = 'none';
+      articles.forEach(function (a) { a.style.display = 'none'; a.classList.remove('active'); });
+      art.style.display = 'block';
+      current = art;
+      window.scrollTo(0, 0);
+      setTimeout(function () { art.classList.add('active'); locked = false; }, instant ? 0 : 25);
+    };
+
+    if (current) {                       // switch between articles
+      current.classList.remove('active');
+      setTimeout(open, instant ? 0 : delay);
+    } else {
+      setTimeout(open, instant ? 0 : delay);
+      body.classList.add('is-article-visible');
+    }
+  }
+
+  function hide() {
+    if (!current) return;
+    var art = current;
+    art.classList.remove('active');
+    setTimeout(function () {
+      art.style.display = 'none';
+      header.style.display = ''; footer.style.display = '';
+      current = null;
+      requestAnimationFrame(function () { requestAnimationFrame(function () {
+        body.classList.remove('is-article-visible');
+      }); });
+      window.scrollTo(0, 0);
+    }, delay);
+  }
+
+  function route(instant) {
+    var id = location.hash.replace('#', '');
+    if (id) show(id, instant); else hide();
+  }
+
+  window.addEventListener('hashchange', function () { route(false); });
+  document.addEventListener('keyup', function (e) { if (e.key === 'Escape' && current) location.hash = ''; });
+  main.addEventListener('click', function (e) { if (e.target === main && current) location.hash = ''; });
+
+  window.addEventListener('load', function () {
+    setTimeout(function () { body.classList.remove('is-preload'); }, 100);
+  });
+  route(true);
+})();
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
